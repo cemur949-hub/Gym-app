@@ -71,7 +71,7 @@ struct ProgramsListView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             } message: { prog in
-                Text(""\(prog.name)" and all its workouts will be permanently deleted.")
+                Text("\"\(prog.name)\" and all its workouts will be permanently deleted.")
             }
         }
     }

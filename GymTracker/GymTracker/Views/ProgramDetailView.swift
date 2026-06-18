@@ -85,7 +85,7 @@ struct ProgramDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: { w in
-            Text(""\(w.name)" will be permanently deleted.")
+            Text("\"\(w.name)\" will be permanently deleted.")
         }
     }
 
