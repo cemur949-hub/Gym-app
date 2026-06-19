@@ -72,7 +72,7 @@ struct ScanWorkoutView: View {
                     .background(settings.accentColor).foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
-                .onChange(of: selectedItem) { _, newItem in
+                .onChange(of: selectedItem) { newItem in
                     guard let newItem else { return }
                     Task {
                         if let data = try? await newItem.loadTransferable(type: Data.self),
