@@ -34,61 +34,35 @@ extension Color {
     static let divider        = Color(hex: "2C2C2E")
 }
 
-// MARK: - SplitType
-enum SplitType: String, CaseIterable, Codable, Identifiable {
-    case push      = "Push"
-    case pull      = "Pull"
-    case legs      = "Legs"
-    case upper     = "Upper"
-    case lower     = "Lower"
-    case fullBody  = "Full Body"
-    case cardio    = "Cardio"
-    case core      = "Core"
-    case arms      = "Arms"
-    case chest     = "Chest"
-    case back      = "Back"
-    case shoulders = "Shoulders"
-    case custom    = "Custom"
+// MARK: - WorkoutSplit (user-defined)
+struct WorkoutSplit: Identifiable, Codable, Equatable, Hashable {
+    var id: UUID
+    var name: String
+    var colorHex: String
+    var icon: String
 
-    var id: String { rawValue }
-
-    var icon: String {
-        switch self {
-        case .push:      return "arrow.up.circle.fill"
-        case .pull:      return "arrow.down.circle.fill"
-        case .legs:      return "figure.walk"
-        case .upper:     return "figure.arms.open"
-        case .lower:     return "figure.run"
-        case .fullBody:  return "figure.strengthtraining.traditional"
-        case .cardio:    return "heart.circle.fill"
-        case .core:      return "scope"
-        case .arms:      return "dumbbell.fill"
-        case .chest:     return "lungs.fill"
-        case .back:      return "arrow.triangle.2.circlepath"
-        case .shoulders: return "person.bust"
-        case .custom:    return "star.fill"
-        }
-    }
-
-    var colorHex: String {
-        switch self {
-        case .push:      return "FF6B35"
-        case .pull:      return "4ECDC4"
-        case .legs:      return "45B7D1"
-        case .upper:     return "96CEB4"
-        case .lower:     return "FFEAA7"
-        case .fullBody:  return "DDA0DD"
-        case .cardio:    return "FF6B6B"
-        case .core:      return "98D8C8"
-        case .arms:      return "F7DC6F"
-        case .chest:     return "E8A0BF"
-        case .back:      return "A8E6CF"
-        case .shoulders: return "FFD93D"
-        case .custom:    return "C3B1E1"
-        }
+    init(id: UUID = UUID(), name: String, colorHex: String = "FF6B35", icon: String = "tag.fill") {
+        self.id       = id
+        self.name     = name
+        self.colorHex = colorHex
+        self.icon     = icon
     }
 
     var color: Color { Color(hex: colorHex) }
+
+    static let presetColors: [(name: String, hex: String)] = [
+        ("Orange", "FF6B35"), ("Red",    "FF3B30"), ("Pink",   "FF2D55"),
+        ("Purple", "BF5AF2"), ("Indigo", "5E5CE6"), ("Blue",   "0A84FF"),
+        ("Teal",   "4ECDC4"), ("Green",  "30D158"), ("Yellow", "FFD60A"),
+        ("Cyan",   "32ADE6"),
+    ]
+
+    static let presetIcons = [
+        "tag.fill", "dumbbell.fill", "figure.strengthtraining.traditional",
+        "heart.fill", "flame.fill", "bolt.fill",
+        "figure.run", "figure.walk", "arrow.up.circle.fill",
+        "arrow.down.circle.fill", "star.fill", "scope",
+    ]
 }
 
 // MARK: - Exercise
@@ -102,21 +76,12 @@ struct Exercise: Identifiable, Codable, Equatable {
     var notes: String
 
     init(
-        id: UUID = UUID(),
-        name: String = "",
-        sets: Int = 3,
-        reps: String = "10",
-        weight: String = "",
-        restSeconds: Int = 60,
-        notes: String = ""
+        id: UUID = UUID(), name: String = "", sets: Int = 3,
+        reps: String = "10", weight: String = "", restSeconds: Int = 60, notes: String = ""
     ) {
-        self.id = id
-        self.name = name
-        self.sets = sets
-        self.reps = reps
-        self.weight = weight
-        self.restSeconds = restSeconds
-        self.notes = notes
+        self.id = id; self.name = name; self.sets = sets
+        self.reps = reps; self.weight = weight
+        self.restSeconds = restSeconds; self.notes = notes
     }
 
     var displayString: String {
@@ -128,8 +93,7 @@ struct Exercise: Identifiable, Codable, Equatable {
     var restDisplay: String {
         if restSeconds == 0 { return "No rest" }
         if restSeconds < 60 { return "\(restSeconds)s" }
-        let m = restSeconds / 60
-        let s = restSeconds % 60
+        let m = restSeconds / 60; let s = restSeconds % 60
         return s == 0 ? "\(m)m" : "\(m)m \(s)s"
     }
 }
@@ -138,25 +102,17 @@ struct Exercise: Identifiable, Codable, Equatable {
 struct Workout: Identifiable, Codable, Equatable {
     var id: UUID
     var name: String
-    var split: SplitType
+    var splitID: UUID?
     var exercises: [Exercise]
     var notes: String
     var createdAt: Date
 
     init(
-        id: UUID = UUID(),
-        name: String = "",
-        split: SplitType = .custom,
-        exercises: [Exercise] = [],
-        notes: String = "",
-        createdAt: Date = Date()
+        id: UUID = UUID(), name: String = "", splitID: UUID? = nil,
+        exercises: [Exercise] = [], notes: String = "", createdAt: Date = Date()
     ) {
-        self.id = id
-        self.name = name
-        self.split = split
-        self.exercises = exercises
-        self.notes = notes
-        self.createdAt = createdAt
+        self.id = id; self.name = name; self.splitID = splitID
+        self.exercises = exercises; self.notes = notes; self.createdAt = createdAt
     }
 }
 
@@ -166,72 +122,71 @@ struct WorkoutProgram: Identifiable, Codable, Equatable {
     var name: String
     var description: String
     var emoji: String
+    var splits: [WorkoutSplit]
     var workouts: [Workout]
     var createdAt: Date
     var colorHex: String
 
     init(
-        id: UUID = UUID(),
-        name: String = "",
-        description: String = "",
-        emoji: String = "💪",
-        workouts: [Workout] = [],
-        createdAt: Date = Date(),
-        colorHex: String = "FF6B35"
+        id: UUID = UUID(), name: String = "", description: String = "",
+        emoji: String = "💪", splits: [WorkoutSplit] = [], workouts: [Workout] = [],
+        createdAt: Date = Date(), colorHex: String = "FF6B35"
     ) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.emoji = emoji
-        self.workouts = workouts
-        self.createdAt = createdAt
-        self.colorHex = colorHex
+        self.id = id; self.name = name; self.description = description
+        self.emoji = emoji; self.splits = splits; self.workouts = workouts
+        self.createdAt = createdAt; self.colorHex = colorHex
     }
 
     var color: Color { Color(hex: colorHex) }
-
     var totalExercises: Int { workouts.reduce(0) { $0 + $1.exercises.count } }
 
-    var availableSplits: [SplitType] {
-        Array(Set(workouts.map(\.split))).sorted { $0.rawValue < $1.rawValue }
+    func split(for workout: Workout) -> WorkoutSplit? {
+        guard let sid = workout.splitID else { return nil }
+        return splits.first { $0.id == sid }
+    }
+
+    var usedSplits: [WorkoutSplit] {
+        let usedIDs = Set(workouts.compactMap(\.splitID))
+        return splits.filter { usedIDs.contains($0.id) }
     }
 }
 
 // MARK: - Sample Data
 extension WorkoutProgram {
     static var sampleData: [WorkoutProgram] {
-        let push = Workout(name: "Push Day", split: .push, exercises: [
-            Exercise(name: "Bench Press",            sets: 4, reps: "8",       weight: "135 lbs", restSeconds: 120),
-            Exercise(name: "Overhead Press",         sets: 3, reps: "10",      weight: "95 lbs",  restSeconds: 90),
-            Exercise(name: "Incline Dumbbell Press", sets: 3, reps: "12",      weight: "45 lbs",  restSeconds: 90),
-            Exercise(name: "Tricep Pushdowns",       sets: 3, reps: "15",      weight: "50 lbs",  restSeconds: 60),
-            Exercise(name: "Lateral Raises",         sets: 4, reps: "15",      weight: "20 lbs",  restSeconds: 60)
+        let push  = WorkoutSplit(name: "Push",  colorHex: "FF6B35", icon: "arrow.up.circle.fill")
+        let pull  = WorkoutSplit(name: "Pull",  colorHex: "4ECDC4", icon: "arrow.down.circle.fill")
+        let legs  = WorkoutSplit(name: "Legs",  colorHex: "45B7D1", icon: "figure.walk")
+
+        let pushW = Workout(name: "Push Day", splitID: push.id, exercises: [
+            Exercise(name: "Bench Press",            sets: 4, reps: "8",      weight: "135 lbs", restSeconds: 120),
+            Exercise(name: "Overhead Press",         sets: 3, reps: "10",     weight: "95 lbs",  restSeconds: 90),
+            Exercise(name: "Incline Dumbbell Press", sets: 3, reps: "12",     weight: "45 lbs",  restSeconds: 90),
+            Exercise(name: "Tricep Pushdowns",       sets: 3, reps: "15",     weight: "50 lbs",  restSeconds: 60),
+            Exercise(name: "Lateral Raises",         sets: 4, reps: "15",     weight: "20 lbs",  restSeconds: 60),
+        ])
+        let pullW = Workout(name: "Pull Day", splitID: pull.id, exercises: [
+            Exercise(name: "Pull-ups",     sets: 4, reps: "8",  weight: "",         restSeconds: 120),
+            Exercise(name: "Barbell Row",  sets: 4, reps: "8",  weight: "135 lbs",  restSeconds: 120),
+            Exercise(name: "Lat Pulldown", sets: 3, reps: "12", weight: "100 lbs",  restSeconds: 90),
+            Exercise(name: "Face Pulls",   sets: 3, reps: "15", weight: "40 lbs",   restSeconds: 60),
+            Exercise(name: "Bicep Curls",  sets: 3, reps: "12", weight: "30 lbs",   restSeconds: 60),
+        ])
+        let legsW = Workout(name: "Leg Day", splitID: legs.id, exercises: [
+            Exercise(name: "Squats",            sets: 5, reps: "5",       weight: "185 lbs", restSeconds: 180),
+            Exercise(name: "Romanian Deadlift", sets: 4, reps: "10",      weight: "135 lbs", restSeconds: 120),
+            Exercise(name: "Leg Press",         sets: 3, reps: "15",      weight: "270 lbs", restSeconds: 90),
+            Exercise(name: "Walking Lunges",    sets: 3, reps: "12 each", weight: "",        restSeconds: 60),
+            Exercise(name: "Calf Raises",       sets: 4, reps: "20",      weight: "135 lbs", restSeconds: 45),
         ])
 
-        let pull = Workout(name: "Pull Day", split: .pull, exercises: [
-            Exercise(name: "Pull-ups",       sets: 4, reps: "8",  weight: "",         restSeconds: 120),
-            Exercise(name: "Barbell Row",    sets: 4, reps: "8",  weight: "135 lbs",  restSeconds: 120),
-            Exercise(name: "Lat Pulldown",   sets: 3, reps: "12", weight: "100 lbs",  restSeconds: 90),
-            Exercise(name: "Face Pulls",     sets: 3, reps: "15", weight: "40 lbs",   restSeconds: 60),
-            Exercise(name: "Bicep Curls",    sets: 3, reps: "12", weight: "30 lbs",   restSeconds: 60)
-        ])
-
-        let legs = Workout(name: "Leg Day", split: .legs, exercises: [
-            Exercise(name: "Squats",              sets: 5, reps: "5",        weight: "185 lbs", restSeconds: 180),
-            Exercise(name: "Romanian Deadlift",   sets: 4, reps: "10",       weight: "135 lbs", restSeconds: 120),
-            Exercise(name: "Leg Press",           sets: 3, reps: "15",       weight: "270 lbs", restSeconds: 90),
-            Exercise(name: "Walking Lunges",      sets: 3, reps: "12 each",  weight: "",        restSeconds: 60),
-            Exercise(name: "Calf Raises",         sets: 4, reps: "20",       weight: "135 lbs", restSeconds: 45)
-        ])
-
-        return [
-            WorkoutProgram(
-                name: "PPL Program",
-                description: "Push / Pull / Legs 6 days per week",
-                emoji: "🔥",
-                workouts: [push, pull, legs],
-                colorHex: "FF6B35"
-            )
-        ]
+        return [WorkoutProgram(
+            name: "PPL Program",
+            description: "Push / Pull / Legs 6 days per week",
+            emoji: "🔥",
+            splits: [push, pull, legs],
+            workouts: [pushW, pullW, legsW],
+            colorHex: "FF6B35"
+        )]
     }
 }
