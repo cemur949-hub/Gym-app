@@ -286,7 +286,7 @@ struct ExerciseEditorRow: View {
                     fieldRow("Exercise Name") {
                         TextField("e.g. Bench Press", text: $localExercise.name)
                             .styledInput()
-                            .onChange(of: localExercise.name) { _, _ in onChange(localExercise) }
+                            .onChange(of: localExercise.name) { _ in onChange(localExercise) }
                     }
                     HStack(spacing: 12) {
                         fieldRow("Sets") {
@@ -310,13 +310,13 @@ struct ExerciseEditorRow: View {
                         fieldRow("Reps") {
                             TextField("10 or 8-12", text: $localExercise.reps)
                                 .styledInput()
-                                .onChange(of: localExercise.reps) { _, _ in onChange(localExercise) }
+                                .onChange(of: localExercise.reps) { _ in onChange(localExercise) }
                         }.frame(maxWidth: .infinity)
                     }
                     fieldRow("Weight (optional)") {
                         TextField("135 lbs, 60 kg...", text: $localExercise.weight)
                             .styledInput()
-                            .onChange(of: localExercise.weight) { _, _ in onChange(localExercise) }
+                            .onChange(of: localExercise.weight) { _ in onChange(localExercise) }
                     }
                     fieldRow("Rest: \(localExercise.restDisplay)") {
                         Slider(value: Binding(
@@ -327,7 +327,7 @@ struct ExerciseEditorRow: View {
                     fieldRow("Notes (optional)") {
                         TextField("Cues, form tips...", text: $localExercise.notes)
                             .styledInput()
-                            .onChange(of: localExercise.notes) { _, _ in onChange(localExercise) }
+                            .onChange(of: localExercise.notes) { _ in onChange(localExercise) }
                     }
                 }
                 .padding(14)
