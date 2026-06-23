@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: #0A0A0A;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+#root {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+}
+
+input, textarea {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #222;
+  color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  width: 100%;
+}
+
+input::placeholder, textarea::placeholder { color: #8E8E93; }
+
+button { cursor: pointer; border: none; background: none; color: inherit; font-family: inherit; }
+
+::-webkit-scrollbar { display: none; }
+
+.safe-top { padding-top: env(safe-area-inset-top, 44px); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
+
+.accent-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.card { background: #171717; border-radius: 18px; padding: 16px; }
+.card-surface { background: #222; border-radius: 14px; }
