@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAppStore } from '../context'
-import { newId, type WorkoutSplit } from '../types'
+import { hexColor, newId, type WorkoutSplit } from '../types'
 import { DarkTextField, SectionHeader, ColorPicker, AccentButton } from './ui'
 
 const ICONS = ['🔥', '⚡', '💪', '🎯', '🏆', '⭐', '💥', '🦾', '🚀', '🔱', '🛡️', '🎽']
@@ -12,7 +12,8 @@ export function CreateSplitSheet({
   onClose: () => void
   programID: string
 }) {
-  const { addSplit } = useAppStore()
+  const { addSplit, settings } = useAppStore()
+  const accent = hexColor(settings.accentColorHex)
   const [name, setName] = useState('')
   const [colorHex, setColorHex] = useState('FF6B35')
   const [icon, setIcon] = useState('🔥')
@@ -37,7 +38,7 @@ export function CreateSplitSheet({
           <button onClick={onClose} className="text-textSecondary text-sm">Cancel</button>
           <span className="font-semibold text-white text-sm">New Split</span>
           <button onClick={create} disabled={!name.trim()}
-            className="text-sm font-bold text-blue-400" style={{ opacity: name.trim() ? 1 : 0.4 }}>
+            className="text-sm font-bold" style={{ color: accent, opacity: name.trim() ? 1 : 0.4 }}>
             Create
           </button>
         </div>

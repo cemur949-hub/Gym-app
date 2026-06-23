@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useAppStore } from '../context'
-import { hexColor, restDisplay, exerciseDisplay, type Exercise } from '../types'
+import { hexColor, accentTextColor, restDisplay, exerciseDisplay, type Exercise } from '../types'
 
 export function ExerciseEditorRow({
   exercise, isExpanded, onTap, onChange, onDelete,
@@ -12,6 +12,8 @@ export function ExerciseEditorRow({
   onDelete: () => void
 }) {
   const { settings } = useAppStore()
+  const accent = hexColor(settings.accentColorHex)
+  const accentFg = accentTextColor(settings.accentColorHex)
   const [local, setLocal] = useState(exercise)
 
   const update = (patch: Partial<Exercise>) => {
@@ -23,7 +25,7 @@ export function ExerciseEditorRow({
   return (
     <div className="card-surface overflow-hidden" style={{ background: '#222' }}>
       <div className="flex items-center gap-3 px-3.5 py-2.5 cursor-pointer" onClick={onTap}>
-        <span className="text-base" style={{ color: isExpanded ? hexColor(settings.accentColorHex) : '#8E8E93' }}>
+        <span className="text-base" style={{ color: isExpanded ? accent : '#8E8E93' }}>
           {isExpanded ? '▼' : '▶'}
         </span>
         <div className="flex-1 min-w-0">
@@ -56,7 +58,7 @@ export function ExerciseEditorRow({
                   <span className="font-bold text-white text-base w-6 text-center">{local.sets}</span>
                   <button onClick={() => update({ sets: local.sets + 1 })}
                     className="w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                    style={{ background: hexColor(settings.accentColorHex) }}>+</button>
+                    style={{ background: accent, color: accentFg }}>+</button>
                 </div>
               </FieldRow>
               <FieldRow label="Reps" className="flex-1">
@@ -73,7 +75,7 @@ export function ExerciseEditorRow({
             <FieldRow label={`Rest: ${restDisplay(local.restSeconds)}`}>
               <input type="range" min={0} max={300} step={15} value={local.restSeconds}
                 onChange={e => update({ restSeconds: Number(e.target.value) })}
-                className="w-full" style={{ accentColor: hexColor(settings.accentColorHex) }} />
+                className="w-full" style={{ accentColor: accent }} />
             </FieldRow>
 
             <FieldRow label="Notes (optional)">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useAppStore } from '../context'
-import { hexColor, newId, type WorkoutProgram } from '../types'
+import { hexColor, accentTextColor, newId, type WorkoutProgram } from '../types'
 import { DarkTextField, SectionHeader, ColorPicker, EmojiPicker, Modal } from './ui'
 import { ProgramDetailView } from './ProgramDetailView'
 
@@ -15,27 +15,30 @@ export function ProgramsView() {
     return <ProgramDetailView program={current} onBack={() => setSelectedProgram(null)} />
   }
 
+  const accent = hexColor(settings.accentColorHex)
+  const accentFg = accentTextColor(settings.accentColorHex)
+
   return (
     <>
-      <div className="flex flex-col min-h-dvh" style={{ background: '#0A0A0A' }}>
-        <div className="px-4 pt-4 safe-top shrink-0">
-          <div className="flex items-center justify-between mb-4">
+      <div style={{ background: '#0A0A0A' }}>
+        <div className="px-4 safe-top">
+          <div className="flex items-center justify-between py-4">
             <h1 className="text-2xl font-bold text-white">Programs</h1>
             <button onClick={() => setEditing('new')}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-lg"
-              style={{ background: hexColor(settings.accentColorHex) }}>+</button>
+              className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg"
+              style={{ background: accent, color: accentFg }}>+</button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-10">
+        <div className="px-4 pb-6">
           {programs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <span className="text-5xl">🏋️</span>
               <p className="text-white font-bold text-lg">No Programs Yet</p>
               <p className="text-textSecondary text-sm text-center">Create your first workout program to get started.</p>
               <button onClick={() => setEditing('new')}
-                className="px-6 py-3 rounded-2xl font-semibold text-white"
-                style={{ background: hexColor(settings.accentColorHex) }}>
+                className="px-6 py-3 rounded-2xl font-semibold"
+                style={{ background: accent, color: accentFg }}>
                 Create Program
               </button>
             </div>
@@ -74,7 +77,6 @@ export function ProgramsView() {
         </div>
       </div>
 
-      {/* Program editor sheet */}
       <ProgramEditorSheet
         isOpen={editing !== null}
         onClose={() => setEditing(null)}
@@ -114,7 +116,7 @@ function ProgramEditorSheet({
   const [name, setName] = useState(program?.name ?? '')
   const [desc, setDesc] = useState(program?.description ?? '')
   const [emoji, setEmoji] = useState(program?.emoji ?? '💪')
-  const [colorHex, setColorHex] = useState(program?.colorHex ?? 'FF6B35')
+  const [colorHex, setColorHex] = useState(program?.colorHex ?? '0A84FF')
   const [tab, setTab] = useState<'emoji' | 'color'>('emoji')
 
   React.useEffect(() => {
@@ -122,7 +124,7 @@ function ProgramEditorSheet({
       setName(program?.name ?? '')
       setDesc(program?.description ?? '')
       setEmoji(program?.emoji ?? '💪')
-      setColorHex(program?.colorHex ?? 'FF6B35')
+      setColorHex(program?.colorHex ?? '0A84FF')
     }
   }, [isOpen, program])
 
@@ -140,6 +142,9 @@ function ProgramEditorSheet({
     })
   }
 
+  const accent = hexColor(settings.accentColorHex)
+  const accentFg = accentTextColor(settings.accentColorHex)
+
   if (!isOpen) return null
 
   return (
@@ -151,7 +156,7 @@ function ProgramEditorSheet({
           <span className="font-semibold text-white text-sm">{program ? 'Edit Program' : 'New Program'}</span>
           <button onClick={save} disabled={!name.trim()}
             className="text-sm font-bold"
-            style={{ color: name.trim() ? hexColor(settings.accentColorHex) : '#8E8E93' }}>
+            style={{ color: name.trim() ? accent : '#555' }}>
             {program ? 'Save' : 'Create'}
           </button>
         </div>
@@ -175,7 +180,7 @@ function ProgramEditorSheet({
               {(['emoji', 'color'] as const).map(t => (
                 <button key={t} onClick={() => setTab(t)}
                   className="px-4 py-1.5 rounded-full text-sm font-semibold capitalize"
-                  style={{ background: tab === t ? hexColor(settings.accentColorHex) : '#222', color: tab === t ? '#fff' : '#8E8E93' }}>
+                  style={{ background: tab === t ? accent : '#222', color: tab === t ? accentFg : '#8E8E93' }}>
                   {t}
                 </button>
               ))}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useAppStore } from '../context'
-import { hexColor, newId, newExercise, type Workout, type WorkoutProgram, type Exercise } from '../types'
+import { hexColor, accentTextColor, newId, newExercise, type Workout, type WorkoutProgram, type Exercise } from '../types'
 import { DarkTextField, SectionHeader } from './ui'
 import { ExerciseEditorRow } from './ExerciseEditor'
 import { CreateSplitSheet } from './CreateSplitSheet'
@@ -14,6 +14,8 @@ export function WorkoutEditorSheet({
   workout: Workout | null
 }) {
   const { addWorkout, updateWorkout, settings } = useAppStore()
+  const accent = hexColor(settings.accentColorHex)
+  const accentFg = accentTextColor(settings.accentColorHex)
   const [name, setName] = useState(workout?.name ?? '')
   const [splitID, setSplitID] = useState<string | null>(workout?.splitID ?? null)
   const [notes, setNotes] = useState(workout?.notes ?? '')
@@ -65,7 +67,7 @@ export function WorkoutEditorSheet({
           <span className="font-semibold text-white text-sm">{workout ? 'Edit Workout' : 'New Workout'}</span>
           <button onClick={save} disabled={!canSave}
             className="text-sm font-bold"
-            style={{ color: canSave ? hexColor(settings.accentColorHex) : '#8E8E93' }}>
+            style={{ color: canSave ? accent : '#555' }}>
             {workout ? 'Save' : 'Add'}
           </button>
         </div>
@@ -81,7 +83,7 @@ export function WorkoutEditorSheet({
               <div className="flex gap-2 overflow-x-auto pb-1">
                 <button onClick={() => setSplitID(null)}
                   className="px-3.5 py-1.5 rounded-full text-sm font-bold shrink-0"
-                  style={{ background: splitID === null ? hexColor(settings.accentColorHex) : '#222', color: splitID === null ? '#fff' : '#8E8E93' }}>
+                  style={{ background: splitID === null ? accent : '#222', color: splitID === null ? accentFg : '#8E8E93' }}>
                   None
                 </button>
                 {program.splits.map(s => (
@@ -93,7 +95,7 @@ export function WorkoutEditorSheet({
                 ))}
                 <button onClick={() => setShowCreateSplit(true)}
                   className="px-3.5 py-1.5 rounded-full text-sm font-bold shrink-0 border"
-                  style={{ background: '#222', color: hexColor(settings.accentColorHex), borderColor: `${hexColor(settings.accentColorHex)}66` }}>
+                  style={{ background: '#222', color: accent, borderColor: `${accent}66` }}>
                   + New Split
                 </button>
               </div>
@@ -105,7 +107,7 @@ export function WorkoutEditorSheet({
             <div className="flex items-center justify-between">
               <SectionHeader>Exercises</SectionHeader>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                style={{ background: `${hexColor(settings.accentColorHex)}33`, color: hexColor(settings.accentColorHex) }}>
+                style={{ background: `${accent}22`, color: accent }}>
                 {exercises.length}
               </span>
             </div>
@@ -132,8 +134,8 @@ export function WorkoutEditorSheet({
 
             <button onClick={addEx}
               className="w-full py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm font-bold border"
-              style={{ background: '#222', color: '#fff', borderColor: `${hexColor(settings.accentColorHex)}44` }}>
-              <span style={{ color: hexColor(settings.accentColorHex) }}>⊕</span> Add Exercise
+              style={{ background: '#222', color: '#fff', borderColor: '#333' }}>
+              <span style={{ color: accent }}>⊕</span> Add Exercise
             </button>
           </div>
 

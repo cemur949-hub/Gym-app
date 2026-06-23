@@ -6,16 +6,16 @@ const PROGRAMS_KEY = 'gymtracker_programs_v1'
 const SETTINGS_KEY = 'gymtracker_settings_v1'
 
 function sampleData(): WorkoutProgram[] {
-  const pushSplit: WorkoutSplit = { id: newId(), name: 'Push', colorHex: 'FF6B35', icon: 'flame' }
-  const pullSplit: WorkoutSplit = { id: newId(), name: 'Pull', colorHex: '0A84FF', icon: 'activity' }
-  const legsSplit: WorkoutSplit = { id: newId(), name: 'Legs', colorHex: '30D158', icon: 'bolt' }
+  const pushSplit: WorkoutSplit = { id: newId(), name: 'Push', colorHex: '0A84FF', icon: 'flame' }
+  const pullSplit: WorkoutSplit = { id: newId(), name: 'Pull', colorHex: '30D158', icon: 'activity' }
+  const legsSplit: WorkoutSplit = { id: newId(), name: 'Legs', colorHex: 'BF5AF2', icon: 'bolt' }
 
   return [{
     id: newId(),
     name: 'My Program',
     description: 'Push Pull Legs',
     emoji: '💪',
-    colorHex: 'FF6B35',
+    colorHex: '0A84FF',
     splits: [pushSplit, pullSplit, legsSplit],
     createdAt: new Date().toISOString(),
     workouts: [
@@ -60,7 +60,7 @@ function loadSettings(): AppSettings {
     const raw = localStorage.getItem(SETTINGS_KEY)
     if (raw) return JSON.parse(raw)
   } catch {}
-  return { accentColorHex: 'FF6B35', weightUnit: 'lbs', showRestTimes: true }
+  return { accentColorHex: 'FFFFFF', weightUnit: 'lbs', showRestTimes: true }
 }
 
 function savePrograms(programs: WorkoutProgram[]) {

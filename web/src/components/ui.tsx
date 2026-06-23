@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAppStore } from '../context'
-import { hexColor } from '../types'
+import { hexColor, accentTextColor } from '../types'
 
 export function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -57,7 +57,11 @@ export function AccentButton({
       onClick={onClick}
       disabled={disabled}
       className={`accent-btn font-semibold ${className ?? ''}`}
-      style={{ background: disabled ? '#333' : hexColor(settings.accentColorHex), opacity: disabled ? 0.5 : 1 }}
+      style={{
+        background: disabled ? '#333' : hexColor(settings.accentColorHex),
+        color: disabled ? '#888' : accentTextColor(settings.accentColorHex),
+        opacity: disabled ? 0.5 : 1,
+      }}
     >
       {children}
     </button>
@@ -145,8 +149,8 @@ export function ColorPicker({
   onChange: (hex: string) => void
 }) {
   const COLORS = [
-    'FF6B35', 'FF3B30', 'FF2D55', 'BF5AF2', '5E5CE6',
-    '0A84FF', '4ECDC4', '30D158', 'FFD60A', '32ADE6',
+    'FFFFFF', '0A84FF', '30D158', '4ECDC4', 'BF5AF2',
+    'FF2D55', 'FF3B30', 'FFD60A', '5E5CE6', '32ADE6',
   ]
   return (
     <div className="grid grid-cols-5 gap-2">

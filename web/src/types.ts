@@ -42,15 +42,15 @@ export interface AppSettings {
 }
 
 export const PRESET_COLORS = [
-  { name: 'Orange', hex: 'FF6B35' },
-  { name: 'Red', hex: 'FF3B30' },
-  { name: 'Pink', hex: 'FF2D55' },
-  { name: 'Purple', hex: 'BF5AF2' },
-  { name: 'Indigo', hex: '5E5CE6' },
+  { name: 'White', hex: 'FFFFFF' },
   { name: 'Blue', hex: '0A84FF' },
-  { name: 'Teal', hex: '4ECDC4' },
   { name: 'Green', hex: '30D158' },
+  { name: 'Teal', hex: '4ECDC4' },
+  { name: 'Purple', hex: 'BF5AF2' },
+  { name: 'Pink', hex: 'FF2D55' },
+  { name: 'Red', hex: 'FF3B30' },
   { name: 'Yellow', hex: 'FFD60A' },
+  { name: 'Indigo', hex: '5E5CE6' },
   { name: 'Cyan', hex: '32ADE6' },
 ]
 
@@ -69,6 +69,14 @@ export function newExercise(): Exercise {
 
 export function hexColor(hex: string) {
   return `#${hex}`
+}
+
+export function accentTextColor(hex: string): string {
+  const r = parseInt(hex.slice(0, 2), 16)
+  const g = parseInt(hex.slice(2, 4), 16)
+  const b = parseInt(hex.slice(4, 6), 16)
+  const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  return lum > 0.55 ? '#0A0A0A' : '#FFFFFF'
 }
 
 export function restDisplay(seconds: number) {

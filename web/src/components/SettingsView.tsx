@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAppStore } from '../context'
-import { hexColor, PRESET_COLORS } from '../types'
+import { hexColor, accentTextColor, PRESET_COLORS } from '../types'
 
 export function SettingsView() {
   const { programs, settings, updateSettings, exportJSON, importJSON, clearAll } = useAppStore()
@@ -11,6 +11,9 @@ export function SettingsView() {
   const [showImport, setShowImport] = useState(false)
   const [importMsg, setImportMsg] = useState('')
   const totalWorkouts = programs.reduce((sum, p) => sum + p.workouts.length, 0)
+
+  const accent = hexColor(settings.accentColorHex)
+  const accentFg = accentTextColor(settings.accentColorHex)
 
   const doExport = () => {
     setExportText(exportJSON())
@@ -29,17 +32,17 @@ export function SettingsView() {
   }
 
   return (
-    <div className="flex flex-col min-h-dvh" style={{ background: '#0A0A0A' }}>
-      <div className="px-4 pt-4 safe-top">
-        <h1 className="text-2xl font-bold text-white mb-4">Settings</h1>
+    <div style={{ background: '#0A0A0A' }}>
+      <div className="px-4 safe-top">
+        <h1 className="text-2xl font-bold text-white py-4">Settings</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-10 space-y-5">
+      <div className="px-4 pb-10 space-y-5">
         {/* Header card */}
         <div className="card flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-            style={{ background: hexColor(settings.accentColorHex) }}>
-            <span className="text-white text-2xl">🏋️</span>
+            style={{ background: accent }}>
+            <span style={{ color: accentFg, fontSize: 24 }}>🏋️</span>
           </div>
           <div>
             <p className="font-bold text-white text-base">GymTracker</p>
@@ -52,20 +55,26 @@ export function SettingsView() {
         <Section title="Appearance">
           <div className="p-4 space-y-4">
             <div>
-              <p className="text-sm text-white mb-2">Accent Color</p>
+              <p className="text-sm text-white mb-3">Accent Color</p>
               <div className="grid grid-cols-5 gap-2">
                 {PRESET_COLORS.map(c => (
                   <button key={c.hex} onClick={() => updateSettings({ accentColorHex: c.hex })}
                     className="w-10 h-10 rounded-full flex items-center justify-center"
-                    style={{ background: `#${c.hex}` }}>
-                    {settings.accentColorHex === c.hex && <span className="text-white text-xs font-bold">✓</span>}
+                    style={{
+                      background: `#${c.hex}`,
+                      border: settings.accentColorHex === c.hex ? '2px solid #fff' : '2px solid transparent',
+                      boxShadow: settings.accentColorHex === c.hex ? '0 0 0 1px #555' : 'none',
+                    }}>
+                    {settings.accentColorHex === c.hex && (
+                      <span style={{ color: accentTextColor(c.hex), fontSize: 12, fontWeight: 700 }}>✓</span>
+                    )}
                   </button>
                 ))}
               </div>
             </div>
             <SettingsDivider />
             <SettingsRow icon="⏱" label="Show Rest Times">
-              <Toggle value={settings.showRestTimes} onChange={v => updateSettings({ showRestTimes: v })} accent={hexColor(settings.accentColorHex)} />
+              <Toggle value={settings.showRestTimes} onChange={v => updateSettings({ showRestTimes: v })} accent={accent} accentFg={accentFg} />
             </SettingsRow>
           </div>
         </Section>
@@ -74,11 +83,14 @@ export function SettingsView() {
         <Section title="Units">
           <div className="p-4">
             <SettingsRow icon="⚖️" label="Weight Unit">
-              <div className="flex rounded-lg overflow-hidden border border-divider">
+              <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid #333' }}>
                 {(['lbs', 'kg'] as const).map(u => (
                   <button key={u} onClick={() => updateSettings({ weightUnit: u })}
                     className="px-4 py-1.5 text-sm font-semibold"
-                    style={{ background: settings.weightUnit === u ? hexColor(settings.accentColorHex) : '#222', color: '#fff' }}>
+                    style={{
+                      background: settings.weightUnit === u ? accent : '#222',
+                      color: settings.weightUnit === u ? accentFg : '#8E8E93',
+                    }}>
                     {u.toUpperCase()}
                   </button>
                 ))}
@@ -91,15 +103,15 @@ export function SettingsView() {
         <Section title="Data">
           <div className="p-4 space-y-1">
             <button onClick={doExport} className="w-full">
-              <SettingsRow icon="📤" label="Export Workouts" chevron />
+              <SettingsRow icon="↑" label="Export Workouts" chevron />
             </button>
             <SettingsDivider />
             <button onClick={() => setShowImport(true)} className="w-full">
-              <SettingsRow icon="📥" label="Import Workouts" chevron />
+              <SettingsRow icon="↓" label="Import Workouts" chevron />
             </button>
             <SettingsDivider />
             <button onClick={() => setShowClear(true)} className="w-full">
-              <SettingsRow icon="🗑" label="Clear All Data" labelColor="#ff3b30" />
+              <SettingsRow icon="×" label="Clear All Data" labelColor="#ff3b30" />
             </button>
           </div>
         </Section>
@@ -107,9 +119,9 @@ export function SettingsView() {
         {/* About */}
         <Section title="About">
           <div className="p-4 space-y-1">
-            <SettingsRow icon="ℹ️" label="Version 1.0.0" />
+            <SettingsRow icon="·" label="Version 1.0.0" />
             <SettingsDivider />
-            <SettingsRow icon="⚡" label="Built with React + Vite" />
+            <SettingsRow icon="·" label="Built with React + Vite" />
           </div>
         </Section>
 
@@ -134,7 +146,7 @@ export function SettingsView() {
       {/* Export sheet */}
       {showExport && (
         <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#0A0A0A' }}>
-          <div className="flex items-center justify-between px-4 py-3 border-b border-divider safe-top">
+          <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
             <button onClick={() => setShowExport(false)} className="text-textSecondary text-sm">Done</button>
             <span className="font-semibold text-white text-sm">Export JSON</span>
             <button onClick={() => {
@@ -143,7 +155,7 @@ export function SettingsView() {
               a.href = URL.createObjectURL(blob)
               a.download = 'gymtracker-export.json'
               a.click()
-            }} className="text-sm font-bold" style={{ color: hexColor(settings.accentColorHex) }}>Save File</button>
+            }} className="text-sm font-bold" style={{ color: accent }}>Save File</button>
           </div>
           <div className="flex-1 overflow-y-auto p-4">
             <pre className="text-xs text-textSecondary font-mono break-all whitespace-pre-wrap p-3 rounded-xl" style={{ background: '#171717' }}>
@@ -156,12 +168,12 @@ export function SettingsView() {
       {/* Import sheet */}
       {showImport && (
         <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#0A0A0A' }}>
-          <div className="flex items-center justify-between px-4 py-3 border-b border-divider safe-top">
+          <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
             <button onClick={() => setShowImport(false)} className="text-textSecondary text-sm">Cancel</button>
             <span className="font-semibold text-white text-sm">Import Workouts</span>
             <button onClick={doImport} disabled={!importText.trim()}
               className="text-sm font-bold"
-              style={{ color: importText.trim() ? hexColor(settings.accentColorHex) : '#8E8E93' }}>
+              style={{ color: importText.trim() ? accent : '#555' }}>
               Import
             </button>
           </div>
@@ -198,7 +210,7 @@ function SettingsRow({ icon, label, labelColor, children, chevron }: {
 }) {
   return (
     <div className="flex items-center gap-3 py-1">
-      <span className="text-base w-7 text-center">{icon}</span>
+      <span className="text-sm font-bold w-5 text-center" style={{ color: '#555' }}>{icon}</span>
       <span className="flex-1 text-sm font-medium" style={{ color: labelColor ?? '#fff' }}>{label}</span>
       {children}
       {chevron && <span className="text-textSecondary text-xs">›</span>}
@@ -207,16 +219,18 @@ function SettingsRow({ icon, label, labelColor, children, chevron }: {
 }
 
 function SettingsDivider() {
-  return <div className="h-px ml-10" style={{ background: '#2a2a2a' }} />
+  return <div className="h-px ml-8" style={{ background: '#222' }} />
 }
 
-function Toggle({ value, onChange, accent }: { value: boolean; onChange: (v: boolean) => void; accent: string }) {
+function Toggle({ value, onChange, accent, accentFg }: {
+  value: boolean; onChange: (v: boolean) => void; accent: string; accentFg: string
+}) {
   return (
     <button onClick={() => onChange(!value)}
       className="w-11 h-6 rounded-full relative transition-colors"
-      style={{ background: value ? accent : '#3a3a3c' }}>
-      <div className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
-        style={{ left: value ? 'calc(100% - 22px)' : '2px' }} />
+      style={{ background: value ? accent : '#333' }}>
+      <div className="absolute top-0.5 w-5 h-5 rounded-full shadow transition-transform"
+        style={{ left: value ? 'calc(100% - 22px)' : '2px', background: value ? accentFg : '#888' }} />
     </button>
   )
 }
