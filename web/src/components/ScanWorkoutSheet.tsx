@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useAppStore } from '../context'
 import { hexColor, accentTextColor, newId, type Exercise } from '../types'
 
@@ -64,7 +64,6 @@ export function ScanWorkoutSheet({
   const { settings } = useAppStore()
   const accent = hexColor(settings.accentColorHex)
   const accentFg = accentTextColor(settings.accentColorHex)
-  const fileRef = useRef<HTMLInputElement>(null)
   const [status, setStatus] = useState<'idle' | 'scanning' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -140,7 +139,7 @@ export function ScanWorkoutSheet({
             <>
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl"
                 style={{ background: `${accent}22` }}>
-                📷
+                🖼️
               </div>
               <p className="text-white font-semibold">Reading workout…</p>
               <p className="text-textSecondary text-sm text-center">Claude is extracting exercises from your photo.</p>
@@ -155,11 +154,11 @@ export function ScanWorkoutSheet({
             <>
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl"
                 style={{ background: `${accent}22` }}>
-                📷
+                🖼️
               </div>
               <div className="text-center">
-                <p className="text-white font-semibold mb-1">Take or Upload a Photo</p>
-                <p className="text-textSecondary text-sm">Point your camera at handwritten notes, a printed program, or a whiteboard.</p>
+                <p className="text-white font-semibold mb-1">Upload a Workout Photo</p>
+                <p className="text-textSecondary text-sm">Select a photo of handwritten notes, a printed program, or a screenshot.</p>
               </div>
 
               {status === 'error' && (
@@ -167,32 +166,16 @@ export function ScanWorkoutSheet({
               )}
 
               <input
-                ref={fileRef}
                 type="file"
                 accept="image/*"
-                capture="environment"
                 className="hidden"
+                id="scan-upload"
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
               />
-
-              <button
-                onClick={() => fileRef.current?.click()}
-                className="w-full py-4 rounded-2xl font-bold text-base"
+              <label htmlFor="scan-upload"
+                className="w-full py-4 rounded-2xl font-bold text-base text-center cursor-pointer block"
                 style={{ background: accent, color: accentFg }}>
-                📷 Open Camera
-              </button>
-
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                id="scan-gallery"
-                onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
-              />
-              <label htmlFor="scan-gallery"
-                className="w-full py-3.5 rounded-2xl font-semibold text-sm text-center cursor-pointer"
-                style={{ background: '#222', color: '#fff' }}>
-                Choose from Gallery
+                Choose Photo
               </label>
 
               {!settings.anthropicApiKey && (

@@ -120,7 +120,7 @@ export function ProgramDetailView({
             <button onClick={() => setShowScan(true)}
               className="py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-1.5"
               style={{ background: '#222', color: '#fff', width: '44%' }}>
-              📷 Scan
+              🖼️ Upload
             </button>
             <button onClick={() => { setScanData(null); setEditingWorkout('new') }}
               className="py-4 rounded-2xl font-bold text-base flex-1"
