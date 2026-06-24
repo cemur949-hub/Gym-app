@@ -177,6 +177,9 @@ export function ScanWorkoutSheet({
                 style={{ background: accent, color: accentFg }}>
                 Choose Photo
               </label>
+              <p className="text-xs text-textSecondary text-center">
+                Tip: in your photo library, scroll to the bottom to find your most recent photos
+              </p>
 
               {!settings.anthropicApiKey && (
                 <p className="text-xs text-center" style={{ color: '#FF9F0A' }}>

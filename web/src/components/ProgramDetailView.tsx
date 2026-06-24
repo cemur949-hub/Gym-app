@@ -114,19 +114,27 @@ export function ProgramDetailView({
           )}
         </div>
 
-        {/* FAB */}
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-4 pb-6 safe-bottom">
-          <div className="flex gap-2">
-            <button onClick={() => setShowScan(true)}
-              className="py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-1.5"
-              style={{ background: '#222', color: '#fff', width: '44%' }}>
-              🖼️ Upload
-            </button>
-            <button onClick={() => { setScanData(null); setEditingWorkout('new') }}
-              className="py-4 rounded-2xl font-bold text-base flex-1"
-              style={{ background: accent, color: accentFg }}>
-              + New Workout
-            </button>
+        {/* FAB — positioned above tab bar */}
+        <div style={{
+          position: 'fixed',
+          bottom: 'calc(env(safe-area-inset-bottom, 16px) + 62px)',
+          left: 0,
+          right: 0,
+          zIndex: 20,
+        }}>
+          <div style={{ maxWidth: 430, margin: '0 auto', padding: '0 16px' }}>
+            <div className="flex gap-2">
+              <button onClick={() => setShowScan(true)}
+                className="py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-1.5"
+                style={{ background: '#222', color: '#fff', width: '44%' }}>
+                🖼️ Upload
+              </button>
+              <button onClick={() => { setScanData(null); setEditingWorkout('new') }}
+                className="py-4 rounded-2xl font-bold text-base flex-1"
+                style={{ background: accent, color: accentFg }}>
+                + New Workout
+              </button>
+            </div>
           </div>
         </div>
       </div>

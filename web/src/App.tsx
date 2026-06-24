@@ -4,6 +4,7 @@ import { useStore } from './store'
 import { hexColor } from './types'
 import { ProgramsView } from './components/ProgramsView'
 import { SettingsView } from './components/SettingsView'
+import React from 'react'
 
 type Tab = 'programs' | 'settings'
 
@@ -14,16 +15,29 @@ export default function App() {
 
   return (
     <StoreContext.Provider value={store}>
-      <div className="relative" style={{ maxWidth: 430, margin: '0 auto', minHeight: '100dvh', background: '#0A0A0A' }}>
+      <div style={{ maxWidth: 430, margin: '0 auto', minHeight: '100dvh', background: '#0A0A0A', position: 'relative' }}>
         <div key={tab} className="anim-up" style={{ paddingBottom: 110 }}>
           {tab === 'programs' && <ProgramsView />}
           {tab === 'settings' && <SettingsView />}
         </div>
 
-        {/* Tab bar */}
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px]"
-          style={{ background: 'rgba(12,12,12,0.97)', backdropFilter: 'blur(24px)', borderTop: '0.5px solid #232323', zIndex: 30 }}>
-          <div className="flex safe-bottom" style={{ paddingTop: 8 }}>
+        {/* Tab bar — full-width fixed, no transform to avoid iOS jitter */}
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 30,
+          background: '#0d0d0d',
+          borderTop: '0.5px solid #252525',
+        }}>
+          <div style={{
+            maxWidth: 430,
+            margin: '0 auto',
+            display: 'flex',
+            paddingTop: 10,
+            paddingBottom: 'env(safe-area-inset-bottom, 16px)',
+          }}>
             <TabItem label="Programs" icon={<DumbbellIcon />} active={tab === 'programs'} onClick={() => setTab('programs')} accent={accent} />
             <TabItem label="Settings" icon={<SlidersIcon />} active={tab === 'settings'} onClick={() => setTab('settings')} accent={accent} />
           </div>
@@ -37,16 +51,27 @@ function TabItem({ label, icon, active, onClick, accent }: {
   label: string; icon: React.ReactNode; active: boolean; onClick: () => void; accent: string
 }) {
   return (
-    <button onClick={onClick} className="flex-1 flex flex-col items-center gap-1.5 py-2">
-      <div style={{ color: active ? accent : '#3e3e3e', transition: 'color 0.18s' }}>
+    <button onClick={onClick} style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 5,
+      paddingBottom: 6,
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+    }}>
+      <div style={{ color: active ? accent : '#3a3a3a', transition: 'color 0.15s' }}>
         {icon}
       </div>
       <span style={{
         fontSize: 10,
         fontWeight: 600,
-        letterSpacing: 0.4,
-        color: active ? accent : '#3e3e3e',
-        transition: 'color 0.18s',
+        letterSpacing: 0.5,
+        color: active ? accent : '#3a3a3a',
+        transition: 'color 0.15s',
+        fontFamily: 'inherit',
       }}>{label.toUpperCase()}</span>
     </button>
   )
@@ -76,6 +101,3 @@ function SlidersIcon() {
     </svg>
   )
 }
-
-// needed for JSX in App
-import React from 'react'
