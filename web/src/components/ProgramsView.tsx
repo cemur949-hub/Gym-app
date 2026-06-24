@@ -137,6 +137,7 @@ function ProgramEditorSheet({
       setDesc(program?.description ?? '')
       setEmoji(program?.emoji ?? '💪')
       setColorHex(program?.colorHex ?? '0A84FF')
+      setTab('emoji')
     }
   }, [isOpen, program])
 
@@ -162,8 +163,8 @@ function ProgramEditorSheet({
   return (
     <div className="fixed inset-0 z-40 flex flex-col justify-end anim-backdrop" style={{ background: 'rgba(0,0,0,0.6)' }}>
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="relative rounded-t-2xl overflow-hidden anim-sheet" style={{ background: '#171717', maxHeight: '85dvh' }}>
-        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: '#222' }}>
+      <div className="relative rounded-t-2xl overflow-hidden anim-sheet flex flex-col" style={{ background: '#171717', maxHeight: '88dvh' }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b shrink-0" style={{ borderColor: '#222' }}>
           <button onClick={onClose} className="text-textSecondary text-sm">Cancel</button>
           <span className="font-semibold text-white text-sm">{program ? 'Edit Program' : 'New Program'}</span>
           <button onClick={save} disabled={!name.trim()}
@@ -172,7 +173,7 @@ function ProgramEditorSheet({
             {program ? 'Save' : 'Create'}
           </button>
         </div>
-        <div className="overflow-y-auto p-4 space-y-4 pb-8">
+        <div className="overflow-y-auto flex-1 p-4 space-y-4 pb-8">
           <div className="flex justify-center mb-2">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
               style={{ background: `#${colorHex}22` }}>

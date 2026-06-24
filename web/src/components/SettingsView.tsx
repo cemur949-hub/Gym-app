@@ -5,8 +5,6 @@ import { hexColor, accentTextColor, PRESET_COLORS } from '../types'
 export function SettingsView() {
   const { programs, settings, updateSettings, exportJSON, importJSON, clearAll } = useAppStore()
   const [showClear, setShowClear] = useState(false)
-  const [showExport, setShowExport] = useState(false)
-  const [exportText, setExportText] = useState('')
   const [importText, setImportText] = useState('')
   const [showImport, setShowImport] = useState(false)
   const [importMsg, setImportMsg] = useState('')
@@ -16,8 +14,14 @@ export function SettingsView() {
   const accentFg = accentTextColor(settings.accentColorHex)
 
   const doExport = () => {
-    setExportText(exportJSON())
-    setShowExport(true)
+    const blob = new Blob([exportJSON()], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'gymtracker-backup.json'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(a.href)
   }
 
   const doImport = () => {
@@ -37,14 +41,14 @@ export function SettingsView() {
         <h1 className="text-2xl font-bold text-white py-4">Settings</h1>
       </div>
 
-      <div className="px-4 pb-10 space-y-5">
+      <div className="px-4 space-y-5 pb-6">
         {/* Header card */}
         <div className="card flex items-center gap-4">
           <img src={`${import.meta.env.BASE_URL}icon-192.png`} className="w-14 h-14 rounded-2xl" alt="GymTracker" />
           <div>
             <p className="font-bold text-white text-base">GymTracker</p>
             <p className="text-xs text-textSecondary">Your personal workout companion</p>
-            <p className="text-xs text-textSecondary">{programs.length} programs · {totalWorkouts} workouts</p>
+            <p className="text-xs text-textSecondary mt-0.5">{programs.length} programs · {totalWorkouts} workouts</p>
           </div>
         </div>
 
@@ -53,17 +57,16 @@ export function SettingsView() {
           <div className="p-4 space-y-4">
             <div>
               <p className="text-sm text-white mb-3">Accent Color</p>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-5 gap-3">
                 {PRESET_COLORS.map(c => (
                   <button key={c.hex} onClick={() => updateSettings({ accentColorHex: c.hex })}
-                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    className="w-11 h-11 rounded-full flex items-center justify-center"
                     style={{
                       background: `#${c.hex}`,
-                      border: settings.accentColorHex === c.hex ? '2px solid #fff' : '2px solid transparent',
-                      boxShadow: settings.accentColorHex === c.hex ? '0 0 0 1px #555' : 'none',
+                      boxShadow: settings.accentColorHex === c.hex ? `0 0 0 2px #0A0A0A, 0 0 0 4px #${c.hex}` : 'none',
                     }}>
                     {settings.accentColorHex === c.hex && (
-                      <span style={{ color: accentTextColor(c.hex), fontSize: 12, fontWeight: 700 }}>✓</span>
+                      <span style={{ color: accentTextColor(c.hex), fontSize: 13, fontWeight: 700 }}>✓</span>
                     )}
                   </button>
                 ))}
@@ -80,13 +83,13 @@ export function SettingsView() {
         <Section title="Units">
           <div className="p-4">
             <SettingsRow icon="⚖️" label="Weight Unit">
-              <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid #333' }}>
+              <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid #2e2e2e' }}>
                 {(['lbs', 'kg'] as const).map(u => (
                   <button key={u} onClick={() => updateSettings({ weightUnit: u })}
-                    className="px-4 py-1.5 text-sm font-semibold"
+                    className="px-5 py-2 text-sm font-semibold"
                     style={{
-                      background: settings.weightUnit === u ? accent : '#222',
-                      color: settings.weightUnit === u ? accentFg : '#8E8E93',
+                      background: settings.weightUnit === u ? accent : 'transparent',
+                      color: settings.weightUnit === u ? accentFg : '#666',
                     }}>
                     {u.toUpperCase()}
                   </button>
@@ -100,41 +103,35 @@ export function SettingsView() {
         <Section title="AI Features">
           <div className="p-4 space-y-3">
             <p className="text-xs text-textSecondary leading-relaxed">
-              Add an Anthropic API key to use <strong className="text-white">Scan from Photo</strong> — take a photo of a paper workout and Claude reads the exercises automatically.
+              Scan a photo of paper notes to auto-fill workouts using Claude AI. Requires an Anthropic API key.
             </p>
-            <div>
-              <p className="text-xs text-textSecondary mb-2">Anthropic API Key</p>
-              <input
-                type="password"
-                placeholder="sk-ant-..."
-                value={settings.anthropicApiKey}
-                onChange={e => updateSettings({ anthropicApiKey: e.target.value })}
-                style={{ background: '#222', color: '#fff', borderRadius: 10, padding: '10px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'monospace' }}
-              />
-            </div>
-            {settings.anthropicApiKey ? (
-              <p className="text-xs" style={{ color: '#30D158' }}>✓ API key saved</p>
-            ) : (
-              <p className="text-xs text-textSecondary">
-                Get a key at console.anthropic.com
-              </p>
-            )}
+            <input
+              type="password"
+              placeholder="sk-ant-..."
+              value={settings.anthropicApiKey}
+              onChange={e => updateSettings({ anthropicApiKey: e.target.value })}
+              style={{ background: '#222', color: '#fff', borderRadius: 10, padding: '10px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'monospace' }}
+            />
+            {settings.anthropicApiKey
+              ? <p className="text-xs" style={{ color: '#30D158' }}>✓ API key saved</p>
+              : <p className="text-xs text-textSecondary">Get a key at console.anthropic.com</p>
+            }
           </div>
         </Section>
 
         {/* Data */}
         <Section title="Data">
           <div className="p-4 space-y-1">
-            <button onClick={doExport} className="w-full">
-              <SettingsRow icon="↑" label="Export Workouts" chevron />
+            <button onClick={doExport} className="w-full text-left">
+              <SettingsRow icon="📤" label="Export Workouts" chevron />
             </button>
             <SettingsDivider />
-            <button onClick={() => setShowImport(true)} className="w-full">
-              <SettingsRow icon="↓" label="Import Workouts" chevron />
+            <button onClick={() => setShowImport(true)} className="w-full text-left">
+              <SettingsRow icon="📥" label="Import Workouts" chevron />
             </button>
             <SettingsDivider />
-            <button onClick={() => setShowClear(true)} className="w-full">
-              <SettingsRow icon="×" label="Clear All Data" labelColor="#ff3b30" />
+            <button onClick={() => setShowClear(true)} className="w-full text-left">
+              <SettingsRow icon="🗑" label="Clear All Data" labelColor="#ff3b30" />
             </button>
           </div>
         </Section>
@@ -142,14 +139,14 @@ export function SettingsView() {
         {/* About */}
         <Section title="About">
           <div className="p-4 space-y-1">
-            <SettingsRow icon="·" label="Version 1.3.0" />
+            <SettingsRow icon="ℹ️" label="Version 1.4.0" />
             <SettingsDivider />
-            <SettingsRow icon="·" label="Built with React + Vite" />
+            <SettingsRow icon="⚡" label="Built with React + Vite" />
           </div>
         </Section>
 
         {importMsg && (
-          <p className="text-center text-sm" style={{ color: importMsg.includes('success') ? '#30D158' : '#FF3B30' }}>
+          <p className="text-center text-sm py-1" style={{ color: importMsg.includes('success') ? '#30D158' : '#FF3B30' }}>
             {importMsg}
           </p>
         )}
@@ -166,28 +163,6 @@ export function SettingsView() {
         />
       )}
 
-      {/* Export sheet */}
-      {showExport && (
-        <div className="fixed inset-0 z-50 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
-          <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
-            <button onClick={() => setShowExport(false)} className="text-textSecondary text-sm">Done</button>
-            <span className="font-semibold text-white text-sm">Export JSON</span>
-            <button onClick={() => {
-              const blob = new Blob([exportText], { type: 'application/json' })
-              const a = document.createElement('a')
-              a.href = URL.createObjectURL(blob)
-              a.download = 'gymtracker-export.json'
-              a.click()
-            }} className="text-sm font-bold" style={{ color: accent }}>Save File</button>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4">
-            <pre className="text-xs text-textSecondary font-mono break-all whitespace-pre-wrap p-3 rounded-xl" style={{ background: '#171717' }}>
-              {exportText}
-            </pre>
-          </div>
-        </div>
-      )}
-
       {/* Import sheet */}
       {showImport && (
         <div className="fixed inset-0 z-50 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
@@ -201,14 +176,14 @@ export function SettingsView() {
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-4">
-            <p className="text-sm text-textSecondary mb-3">Paste exported GymTracker JSON below:</p>
+            <p className="text-sm text-textSecondary mb-3">Paste a GymTracker export JSON below:</p>
             <textarea
               value={importText}
               onChange={e => setImportText(e.target.value)}
               placeholder="Paste JSON here..."
-              rows={12}
-              className="w-full text-sm font-mono p-3 rounded-xl resize-none"
-              style={{ background: '#171717', color: '#fff', border: 'none', outline: 'none' }}
+              rows={14}
+              className="w-full font-mono p-3 rounded-xl resize-none"
+              style={{ background: '#171717', color: '#fff', border: 'none', outline: 'none', fontSize: 14 }}
             />
           </div>
         </div>
@@ -232,17 +207,17 @@ function SettingsRow({ icon, label, labelColor, children, chevron }: {
   icon: string; label: string; labelColor?: string; children?: React.ReactNode; chevron?: boolean
 }) {
   return (
-    <div className="flex items-center gap-3 py-1">
-      <span className="text-sm font-bold w-5 text-center" style={{ color: '#555' }}>{icon}</span>
+    <div className="flex items-center gap-3 py-1.5">
+      <span className="text-base w-6 text-center">{icon}</span>
       <span className="flex-1 text-sm font-medium" style={{ color: labelColor ?? '#fff' }}>{label}</span>
       {children}
-      {chevron && <span className="text-textSecondary text-xs">›</span>}
+      {chevron && <span style={{ color: '#444', fontSize: 16 }}>›</span>}
     </div>
   )
 }
 
 function SettingsDivider() {
-  return <div className="h-px ml-8" style={{ background: '#222' }} />
+  return <div className="h-px ml-9" style={{ background: '#242424' }} />
 }
 
 function Toggle({ value, onChange, accent, accentFg }: {
@@ -250,10 +225,14 @@ function Toggle({ value, onChange, accent, accentFg }: {
 }) {
   return (
     <button onClick={() => onChange(!value)}
-      className="w-11 h-6 rounded-full relative transition-colors"
-      style={{ background: value ? accent : '#333' }}>
-      <div className="absolute top-0.5 w-5 h-5 rounded-full shadow transition-transform"
-        style={{ left: value ? 'calc(100% - 22px)' : '2px', background: value ? accentFg : '#888' }} />
+      className="w-12 h-7 rounded-full relative transition-colors shrink-0"
+      style={{ background: value ? accent : '#2e2e2e' }}>
+      <div className="absolute top-1 w-5 h-5 rounded-full shadow-md transition-transform duration-200"
+        style={{
+          left: value ? 'calc(100% - 22px)' : '4px',
+          background: value ? accentFg : '#666',
+          transform: 'translateZ(0)',
+        }} />
     </button>
   )
 }
@@ -262,11 +241,11 @@ function ConfirmModal({ title, message, onConfirm, onCancel, destructive }: {
   title: string; message: string; onConfirm: () => void; onCancel: () => void; destructive?: boolean
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6"
-      style={{ background: 'rgba(0,0,0,0.6)' }}>
-      <div className="rounded-2xl p-5 w-full max-w-xs" style={{ background: '#1c1c1e' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-6 anim-backdrop"
+      style={{ background: 'rgba(0,0,0,0.65)' }}>
+      <div className="rounded-2xl p-5 w-full max-w-xs anim-modal" style={{ background: '#1c1c1e' }}>
         <h3 className="font-bold text-white text-center mb-1">{title}</h3>
-        <p className="text-textSecondary text-sm text-center mb-4">{message}</p>
+        <p className="text-textSecondary text-sm text-center mb-5">{message}</p>
         <div className="flex flex-col gap-2">
           <button onClick={onConfirm}
             className="py-3 rounded-xl font-semibold text-sm"
@@ -283,3 +262,5 @@ function ConfirmModal({ title, message, onConfirm, onCancel, destructive }: {
     </div>
   )
 }
+
+import React from 'react'
