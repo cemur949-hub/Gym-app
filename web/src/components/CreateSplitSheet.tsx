@@ -15,7 +15,7 @@ export function CreateSplitSheet({
   const { addSplit, settings } = useAppStore()
   const accent = hexColor(settings.accentColorHex)
   const [name, setName] = useState('')
-  const [colorHex, setColorHex] = useState('FF6B35')
+  const [colorHex, setColorHex] = useState('0A84FF')
   const [icon, setIcon] = useState('🔥')
 
   const create = () => {
@@ -23,7 +23,7 @@ export function CreateSplitSheet({
     const split: WorkoutSplit = { id: newId(), name: name.trim(), colorHex, icon }
     addSplit(programID, split)
     setName('')
-    setColorHex('FF6B35')
+    setColorHex('0A84FF')
     setIcon('🔥')
     onClose()
   }
@@ -31,9 +31,9 @@ export function CreateSplitSheet({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end" style={{ background: 'rgba(0,0,0,0.7)' }}>
+    <div className="fixed inset-0 z-50 flex flex-col justify-end anim-backdrop" style={{ background: 'rgba(0,0,0,0.7)' }}>
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="relative rounded-t-2xl overflow-hidden" style={{ background: '#171717' }}>
+      <div className="relative rounded-t-2xl overflow-hidden anim-sheet" style={{ background: '#171717' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-divider">
           <button onClick={onClose} className="text-textSecondary text-sm">Cancel</button>
           <span className="font-semibold text-white text-sm">New Split</span>

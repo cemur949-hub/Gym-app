@@ -29,7 +29,7 @@ export function ProgramDetailView({
 
   return (
     <>
-      <div style={{ background: '#0A0A0A' }}>
+      <div className="anim-right" style={{ background: '#0A0A0A' }}>
         {/* Sticky header */}
         <div className="px-4 safe-top" style={{ position: 'sticky', top: 0, zIndex: 10, background: '#0A0A0A', paddingBottom: 8 }}>
           <div className="flex items-center gap-3 pt-4 mb-3">
@@ -143,7 +143,7 @@ export function ProgramDetailView({
 
       {/* Splits manager */}
       {showSplits && (
-        <div className="fixed inset-0 z-40 flex flex-col" style={{ background: '#0A0A0A' }}>
+        <div className="fixed inset-0 z-40 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
           <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
             <button onClick={() => setShowSplits(false)} className="text-textSecondary text-sm">← Back</button>
             <span className="font-semibold text-white text-sm">Manage Splits</span>

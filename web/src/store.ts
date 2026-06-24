@@ -58,7 +58,11 @@ function loadPrograms(): WorkoutProgram[] {
 function loadSettings(): AppSettings {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY)
-    if (raw) return JSON.parse(raw)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (parsed.accentColorHex === 'FF6B35') parsed.accentColorHex = 'FFFFFF'
+      return parsed
+    }
   } catch {}
   return { accentColorHex: 'FFFFFF', weightUnit: 'lbs', showRestTimes: true }
 }

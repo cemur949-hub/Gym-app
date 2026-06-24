@@ -61,7 +61,7 @@ export function WorkoutEditorSheet({
 
   return (
     <>
-      <div className="fixed inset-0 z-40 flex flex-col" style={{ background: '#0A0A0A' }}>
+      <div className="fixed inset-0 z-40 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-divider shrink-0 safe-top">
           <button onClick={onClose} className="text-textSecondary text-sm">Cancel</button>
           <span className="font-semibold text-white text-sm">{workout ? 'Edit Workout' : 'New Workout'}</span>

@@ -15,17 +15,18 @@ export default function App() {
   return (
     <StoreContext.Provider value={store}>
       <div className="relative" style={{ maxWidth: 430, margin: '0 auto', minHeight: '100dvh', background: '#0A0A0A' }}>
-        <div style={{ paddingBottom: 64 }}>
+        {/* key forces remount + entrance animation on tab switch */}
+        <div key={tab} className="anim-up" style={{ paddingBottom: 64 }}>
           {tab === 'programs' && <ProgramsView />}
           {tab === 'settings' && <SettingsView />}
         </div>
 
         {/* Tab bar */}
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] border-t"
-          style={{ background: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(20px)', borderColor: '#222' }}>
+          style={{ background: 'rgba(10,10,10,0.96)', backdropFilter: 'blur(20px)', borderColor: '#1e1e1e' }}>
           <div className="flex safe-bottom">
-            <TabItem label="Programs" icon="⬛" active={tab === 'programs'} onClick={() => setTab('programs')} accent={accent} />
-            <TabItem label="Settings" icon="⬛" active={tab === 'settings'} onClick={() => setTab('settings')} accent={accent} />
+            <TabItem label="Programs" active={tab === 'programs'} onClick={() => setTab('programs')} accent={accent} />
+            <TabItem label="Settings" active={tab === 'settings'} onClick={() => setTab('settings')} accent={accent} />
           </div>
         </div>
       </div>
@@ -33,13 +34,15 @@ export default function App() {
   )
 }
 
-function TabItem({ label, icon: _icon, active, onClick, accent }: {
-  label: string; icon: string; active: boolean; onClick: () => void; accent: string
+function TabItem({ label, active, onClick, accent }: {
+  label: string; active: boolean; onClick: () => void; accent: string
 }) {
   return (
     <button onClick={onClick} className="flex-1 flex flex-col items-center gap-1 py-3">
-      <div className="w-5 h-0.5 rounded-full" style={{ background: active ? accent : 'transparent' }} />
-      <span className="text-xs font-semibold tracking-wide" style={{ color: active ? accent : '#555' }}>{label}</span>
+      <div className="w-6 h-0.5 rounded-full transition-all duration-200"
+        style={{ background: active ? accent : 'transparent' }} />
+      <span className="text-xs font-semibold tracking-wide transition-colors duration-200"
+        style={{ color: active ? accent : '#444' }}>{label}</span>
     </button>
   )
 }

@@ -40,10 +40,7 @@ export function SettingsView() {
       <div className="px-4 pb-10 space-y-5">
         {/* Header card */}
         <div className="card flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-            style={{ background: accent }}>
-            <span style={{ color: accentFg, fontSize: 24 }}>🏋️</span>
-          </div>
+          <img src={`${import.meta.env.BASE_URL}icon-192.png`} className="w-14 h-14 rounded-2xl" alt="GymTracker" />
           <div>
             <p className="font-bold text-white text-base">GymTracker</p>
             <p className="text-xs text-textSecondary">Your personal workout companion</p>
@@ -119,7 +116,7 @@ export function SettingsView() {
         {/* About */}
         <Section title="About">
           <div className="p-4 space-y-1">
-            <SettingsRow icon="·" label="Version 1.2.0" />
+            <SettingsRow icon="·" label="Version 1.3.0" />
             <SettingsDivider />
             <SettingsRow icon="·" label="Built with React + Vite" />
           </div>
@@ -145,7 +142,7 @@ export function SettingsView() {
 
       {/* Export sheet */}
       {showExport && (
-        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#0A0A0A' }}>
+        <div className="fixed inset-0 z-50 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
           <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
             <button onClick={() => setShowExport(false)} className="text-textSecondary text-sm">Done</button>
             <span className="font-semibold text-white text-sm">Export JSON</span>
@@ -167,7 +164,7 @@ export function SettingsView() {
 
       {/* Import sheet */}
       {showImport && (
-        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#0A0A0A' }}>
+        <div className="fixed inset-0 z-50 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
           <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
             <button onClick={() => setShowImport(false)} className="text-textSecondary text-sm">Cancel</button>
             <span className="font-semibold text-white text-sm">Import Workouts</span>

@@ -26,8 +26,8 @@ export function DarkTextField({
         value={value}
         onChange={e => onChange(e.target.value)}
         rows={rows ?? 3}
-        className="w-full bg-surface rounded-xl px-3 py-2.5 text-white text-sm resize-none"
-        style={{ background: '#222' }}
+        className="w-full bg-surface rounded-xl px-3 py-2.5 text-white resize-none"
+        style={{ background: '#222', fontSize: 16 }}
       />
     )
   }
@@ -37,8 +37,8 @@ export function DarkTextField({
       placeholder={placeholder}
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="w-full bg-surface rounded-xl px-3 py-2.5 text-white text-sm"
-      style={{ background: '#222' }}
+      className="w-full bg-surface rounded-xl px-3 py-2.5 text-white"
+      style={{ background: '#222', fontSize: 16 }}
     />
   )
 }
@@ -83,7 +83,7 @@ export function Sheet({
         className="absolute inset-0"
         onClick={onClose}
       />
-      <div className="relative rounded-t-2xl overflow-hidden flex flex-col"
+      <div className="relative rounded-t-2xl overflow-hidden flex flex-col anim-sheet"
         style={{ background: '#171717', maxHeight: '92dvh' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-divider shrink-0">
           <button onClick={onClose} className="text-textSecondary text-sm">Cancel</button>
@@ -111,7 +111,7 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-6"
       style={{ background: 'rgba(0,0,0,0.6)' }}>
-      <div className="rounded-2xl p-5 w-full max-w-xs" style={{ background: '#1c1c1e' }}>
+      <div className="rounded-2xl p-5 w-full max-w-xs anim-modal" style={{ background: '#1c1c1e' }}>
         <h3 className="font-bold text-white text-center mb-1">{title}</h3>
         <p className="text-textSecondary text-sm text-center mb-4">{message}</p>
         <div className="flex flex-col gap-2">

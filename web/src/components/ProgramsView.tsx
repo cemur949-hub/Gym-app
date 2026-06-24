@@ -7,20 +7,32 @@ import { ProgramDetailView } from './ProgramDetailView'
 export function ProgramsView() {
   const { programs, addProgram, updateProgram, deleteProgram, settings } = useAppStore()
   const [selectedProgram, setSelectedProgram] = useState<WorkoutProgram | null>(null)
+  const [navDir, setNavDir] = useState<'enter' | 'back'>('enter')
   const [editing, setEditing] = useState<WorkoutProgram | 'new' | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<WorkoutProgram | null>(null)
 
+  const openDetail = (p: WorkoutProgram) => {
+    setNavDir('enter')
+    setSelectedProgram(p)
+  }
+
+  const closeDetail = () => {
+    setNavDir('back')
+    setSelectedProgram(null)
+  }
+
   if (selectedProgram) {
     const current = programs.find(p => p.id === selectedProgram.id) ?? selectedProgram
-    return <ProgramDetailView program={current} onBack={() => setSelectedProgram(null)} />
+    return <ProgramDetailView program={current} onBack={closeDetail} />
   }
 
   const accent = hexColor(settings.accentColorHex)
   const accentFg = accentTextColor(settings.accentColorHex)
+  const animClass = navDir === 'back' ? 'anim-left' : 'anim-up'
 
   return (
     <>
-      <div style={{ background: '#0A0A0A' }}>
+      <div className={animClass} style={{ background: '#0A0A0A' }}>
         <div className="px-4 safe-top">
           <div className="flex items-center justify-between py-4">
             <h1 className="text-2xl font-bold text-white">Programs</h1>
@@ -46,7 +58,7 @@ export function ProgramsView() {
             <div className="grid grid-cols-2 gap-3">
               {programs.map(p => (
                 <div key={p.id} className="card cursor-pointer relative"
-                  onClick={() => setSelectedProgram(p)}
+                  onClick={() => openDetail(p)}
                   style={{ minHeight: 120 }}>
                   <div className="absolute top-2 right-2 flex gap-1">
                     <button onClick={e => { e.stopPropagation(); setEditing(p) }}
@@ -148,10 +160,10 @@ function ProgramEditorSheet({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col justify-end" style={{ background: 'rgba(0,0,0,0.6)' }}>
+    <div className="fixed inset-0 z-40 flex flex-col justify-end anim-backdrop" style={{ background: 'rgba(0,0,0,0.6)' }}>
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="relative rounded-t-2xl overflow-hidden" style={{ background: '#171717', maxHeight: '85dvh' }}>
-        <div className="flex items-center justify-between px-4 py-3 border-b border-divider">
+      <div className="relative rounded-t-2xl overflow-hidden anim-sheet" style={{ background: '#171717', maxHeight: '85dvh' }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: '#222' }}>
           <button onClick={onClose} className="text-textSecondary text-sm">Cancel</button>
           <span className="font-semibold text-white text-sm">{program ? 'Edit Program' : 'New Program'}</span>
           <button onClick={save} disabled={!name.trim()}

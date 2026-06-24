@@ -46,7 +46,7 @@ export function ExerciseEditorRow({
           <div className="space-y-3 pt-3">
             <FieldRow label="Exercise Name">
               <input value={local.name} onChange={e => update({ name: e.target.value })}
-                placeholder="e.g. Bench Press" className="styled-input" style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 14 }} />
+                placeholder="e.g. Bench Press" className="styled-input" style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
             </FieldRow>
 
             <div className="flex gap-3">
@@ -63,13 +63,13 @@ export function ExerciseEditorRow({
               </FieldRow>
               <FieldRow label="Reps" className="flex-1">
                 <input value={local.reps} onChange={e => update({ reps: e.target.value })}
-                  placeholder="10 or 8-12" style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 14 }} />
+                  placeholder="10 or 8-12" style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
               </FieldRow>
             </div>
 
             <FieldRow label="Weight (optional)">
               <input value={local.weight} onChange={e => update({ weight: e.target.value })}
-                placeholder="135 lbs, 60 kg..." style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 14 }} />
+                placeholder="135 lbs, 60 kg..." style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
             </FieldRow>
 
             <FieldRow label={`Rest: ${restDisplay(local.restSeconds)}`}>
@@ -80,7 +80,7 @@ export function ExerciseEditorRow({
 
             <FieldRow label="Notes (optional)">
               <input value={local.notes} onChange={e => update({ notes: e.target.value })}
-                placeholder="Cues, form tips..." style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 14 }} />
+                placeholder="Cues, form tips..." style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
             </FieldRow>
           </div>
         </div>
