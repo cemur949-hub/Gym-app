@@ -64,7 +64,7 @@ function loadSettings(): AppSettings {
       return parsed
     }
   } catch {}
-  return { accentColorHex: 'FFFFFF', weightUnit: 'lbs', showRestTimes: true }
+  return { accentColorHex: 'FFFFFF', weightUnit: 'lbs', showRestTimes: true, anthropicApiKey: '' }
 }
 
 function savePrograms(programs: WorkoutProgram[]) {

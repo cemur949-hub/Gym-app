@@ -96,6 +96,32 @@ export function SettingsView() {
           </div>
         </Section>
 
+        {/* AI Features */}
+        <Section title="AI Features">
+          <div className="p-4 space-y-3">
+            <p className="text-xs text-textSecondary leading-relaxed">
+              Add an Anthropic API key to use <strong className="text-white">Scan from Photo</strong> — take a photo of a paper workout and Claude reads the exercises automatically.
+            </p>
+            <div>
+              <p className="text-xs text-textSecondary mb-2">Anthropic API Key</p>
+              <input
+                type="password"
+                placeholder="sk-ant-..."
+                value={settings.anthropicApiKey}
+                onChange={e => updateSettings({ anthropicApiKey: e.target.value })}
+                style={{ background: '#222', color: '#fff', borderRadius: 10, padding: '10px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'monospace' }}
+              />
+            </div>
+            {settings.anthropicApiKey ? (
+              <p className="text-xs" style={{ color: '#30D158' }}>✓ API key saved</p>
+            ) : (
+              <p className="text-xs text-textSecondary">
+                Get a key at console.anthropic.com
+              </p>
+            )}
+          </div>
+        </Section>
+
         {/* Data */}
         <Section title="Data">
           <div className="p-4 space-y-1">

@@ -6,12 +6,13 @@ import { ExerciseEditorRow } from './ExerciseEditor'
 import { CreateSplitSheet } from './CreateSplitSheet'
 
 export function WorkoutEditorSheet({
-  isOpen, onClose, program, workout,
+  isOpen, onClose, program, workout, scanData,
 }: {
   isOpen: boolean
   onClose: () => void
   program: WorkoutProgram
   workout: Workout | null
+  scanData?: { name: string; exercises: Exercise[] } | null
 }) {
   const { addWorkout, updateWorkout, settings } = useAppStore()
   const accent = hexColor(settings.accentColorHex)
@@ -23,16 +24,15 @@ export function WorkoutEditorSheet({
   const [expandedID, setExpandedID] = useState<string | null>(null)
   const [showCreateSplit, setShowCreateSplit] = useState(false)
 
-  // Reset when opening
   React.useEffect(() => {
     if (isOpen) {
-      setName(workout?.name ?? '')
+      setName(workout?.name ?? scanData?.name ?? '')
       setSplitID(workout?.splitID ?? null)
       setNotes(workout?.notes ?? '')
-      setExercises(workout?.exercises ?? [])
+      setExercises(workout?.exercises ?? scanData?.exercises ?? [])
       setExpandedID(null)
     }
-  }, [isOpen, workout])
+  }, [isOpen, workout, scanData])
 
   const canSave = name.trim().length > 0
 

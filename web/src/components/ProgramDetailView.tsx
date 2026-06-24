@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useAppStore } from '../context'
-import { hexColor, accentTextColor, type WorkoutProgram, type Workout } from '../types'
+import { hexColor, accentTextColor, type WorkoutProgram, type Workout, type Exercise } from '../types'
 import { SplitPill, Modal } from './ui'
 import { WorkoutEditorSheet } from './WorkoutEditorSheet'
 import { CreateSplitSheet } from './CreateSplitSheet'
+import { ScanWorkoutSheet } from './ScanWorkoutSheet'
 
 export function ProgramDetailView({
   program, onBack,
@@ -17,6 +18,8 @@ export function ProgramDetailView({
   const [deleteTarget, setDeleteTarget] = useState<Workout | null>(null)
   const [showSplits, setShowSplits] = useState(false)
   const [showCreateSplit, setShowCreateSplit] = useState(false)
+  const [showScan, setShowScan] = useState(false)
+  const [scanData, setScanData] = useState<{ name: string; exercises: Exercise[] } | null>(null)
 
   const filteredWorkouts = filterSplitID === 'all'
     ? program.workouts
@@ -113,19 +116,37 @@ export function ProgramDetailView({
 
         {/* FAB */}
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-4 pb-6 safe-bottom">
-          <button onClick={() => setEditingWorkout('new')}
-            className="w-full py-4 rounded-2xl font-bold text-base"
-            style={{ background: accent, color: accentFg }}>
-            + New Workout
-          </button>
+          <div className="flex gap-2">
+            <button onClick={() => setShowScan(true)}
+              className="py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-1.5"
+              style={{ background: '#222', color: '#fff', width: '44%' }}>
+              📷 Scan
+            </button>
+            <button onClick={() => { setScanData(null); setEditingWorkout('new') }}
+              className="py-4 rounded-2xl font-bold text-base flex-1"
+              style={{ background: accent, color: accentFg }}>
+              + New Workout
+            </button>
+          </div>
         </div>
       </div>
 
       <WorkoutEditorSheet
         isOpen={editingWorkout !== null}
-        onClose={() => setEditingWorkout(null)}
+        onClose={() => { setEditingWorkout(null); setScanData(null) }}
         program={program}
         workout={editingWorkout === 'new' ? null : (editingWorkout as Workout)}
+        scanData={scanData}
+      />
+
+      <ScanWorkoutSheet
+        isOpen={showScan}
+        onClose={() => setShowScan(false)}
+        onResult={(name, exercises) => {
+          setScanData({ name, exercises })
+          setShowScan(false)
+          setEditingWorkout('new')
+        }}
       />
 
       <Modal

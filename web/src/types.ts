@@ -39,6 +39,7 @@ export interface AppSettings {
   accentColorHex: string
   weightUnit: 'lbs' | 'kg'
   showRestTimes: boolean
+  anthropicApiKey: string
 }
 
 export const PRESET_COLORS = [
