@@ -69,7 +69,7 @@ export function ProgramDetailView({
         </div>
 
         {/* Workout list */}
-        <div className="px-4 pb-28">
+        <div className="px-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 140px)' }}>
           {filteredWorkouts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               <span className="text-4xl">🏋️</span>
