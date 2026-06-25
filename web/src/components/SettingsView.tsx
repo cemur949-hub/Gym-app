@@ -139,7 +139,7 @@ export function SettingsView() {
         {/* About */}
         <Section title="About">
           <div className="p-4 space-y-1">
-            <SettingsRow icon="ℹ️" label="Version 1.4.0" />
+            <SettingsRow icon="ℹ️" label="Version 1.4.1" />
             <SettingsDivider />
             <SettingsRow icon="⚡" label="Built with React + Vite" />
           </div>
