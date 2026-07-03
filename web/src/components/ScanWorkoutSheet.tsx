@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAppStore } from '../context'
 import { hexColor, accentTextColor, newId, type Exercise } from '../types'
 
@@ -26,9 +26,13 @@ Rules:
 - Return ONLY the JSON object, absolutely no other text`
 
 async function resizeImage(file: File): Promise<{ data: string; mediaType: 'image/jpeg' }> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const img = new Image()
     const url = URL.createObjectURL(file)
+    img.onerror = () => {
+      URL.revokeObjectURL(url)
+      reject(new Error('Could not read that image. Try a different photo.'))
+    }
     img.onload = () => {
       const MAX = 1280
       let { width, height } = img
@@ -66,6 +70,13 @@ export function ScanWorkoutSheet({
   const accentFg = accentTextColor(settings.accentColorHex)
   const [status, setStatus] = useState<'idle' | 'scanning' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  useEffect(() => {
+    if (isOpen) {
+      setStatus('idle')
+      setErrorMsg('')
+    }
+  }, [isOpen])
 
   const handleFile = async (file: File) => {
     if (!settings.anthropicApiKey) {
@@ -171,7 +182,11 @@ export function ScanWorkoutSheet({
                 accept="image/*"
                 className="hidden"
                 id="scan-upload"
-                onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
+                onChange={e => {
+                  const f = e.target.files?.[0]
+                  e.target.value = '' // allow re-selecting the same photo
+                  if (f) handleFile(f)
+                }}
               />
               <label htmlFor="scan-upload"
                 className="w-full py-4 rounded-2xl font-bold text-base text-center cursor-pointer block"

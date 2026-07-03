@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAppStore } from '../context'
 import { hexColor, newId, type WorkoutSplit } from '../types'
 import { DarkTextField, SectionHeader, ColorPicker, AccentButton } from './ui'
@@ -17,6 +17,14 @@ export function CreateSplitSheet({
   const [name, setName] = useState('')
   const [colorHex, setColorHex] = useState('0A84FF')
   const [icon, setIcon] = useState('🔥')
+
+  useEffect(() => {
+    if (isOpen) {
+      setName('')
+      setColorHex('0A84FF')
+      setIcon('🔥')
+    }
+  }, [isOpen])
 
   const create = () => {
     if (!name.trim()) return

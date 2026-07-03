@@ -184,7 +184,8 @@ export function ProgramDetailView({
               + New
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 py-4">
+          <div className="flex-1 overflow-y-auto px-4 py-4"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
             {program.splits.length === 0 ? (
               <p className="text-center text-textSecondary text-sm py-8">No splits yet. Create one!</p>
             ) : (
@@ -203,7 +204,10 @@ export function ProgramDetailView({
                         </p>
                       </div>
                     </div>
-                    <button onClick={() => deleteSplit(program.id, s.id)}
+                    <button onClick={() => {
+                      if (filterSplitID === s.id) setFilterSplitID('all')
+                      deleteSplit(program.id, s.id)
+                    }}
                       className="text-red-500 opacity-70 text-sm">🗑</button>
                   </div>
                 ))}

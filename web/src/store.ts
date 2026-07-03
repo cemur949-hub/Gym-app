@@ -55,16 +55,24 @@ function loadPrograms(): WorkoutProgram[] {
   return sampleData()
 }
 
+const DEFAULT_SETTINGS: AppSettings = {
+  accentColorHex: 'FFFFFF',
+  weightUnit: 'lbs',
+  showRestTimes: true,
+  anthropicApiKey: '',
+}
+
 function loadSettings(): AppSettings {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY)
     if (raw) {
       const parsed = JSON.parse(raw)
       if (parsed.accentColorHex === 'FF6B35') parsed.accentColorHex = 'FFFFFF'
-      return parsed
+      // Merge so fields added after the user's first visit get defaults
+      return { ...DEFAULT_SETTINGS, ...parsed }
     }
   } catch {}
-  return { accentColorHex: 'FFFFFF', weightUnit: 'lbs', showRestTimes: true, anthropicApiKey: '' }
+  return DEFAULT_SETTINGS
 }
 
 function savePrograms(programs: WorkoutProgram[]) {
@@ -138,6 +146,14 @@ export function useStore() {
   const importJSON = useCallback((json: string) => {
     const data = JSON.parse(json)
     if (!Array.isArray(data)) throw new Error('Invalid format')
+    const valid = data.every((p: unknown) =>
+      p !== null && typeof p === 'object' &&
+      typeof (p as WorkoutProgram).id === 'string' &&
+      typeof (p as WorkoutProgram).name === 'string' &&
+      Array.isArray((p as WorkoutProgram).workouts) &&
+      Array.isArray((p as WorkoutProgram).splits)
+    )
+    if (!valid) throw new Error('Invalid format')
     setPrograms(data)
   }, [])
 

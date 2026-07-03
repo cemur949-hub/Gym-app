@@ -69,14 +69,17 @@ export function ExerciseEditorRow({
 
             <FieldRow label="Weight (optional)">
               <input value={local.weight} onChange={e => update({ weight: e.target.value })}
-                placeholder="135 lbs, 60 kg..." style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
+                placeholder={settings.weightUnit === 'kg' ? 'e.g. 60 kg' : 'e.g. 135 lbs'}
+                style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
             </FieldRow>
 
-            <FieldRow label={`Rest: ${restDisplay(local.restSeconds)}`}>
-              <input type="range" min={0} max={300} step={15} value={local.restSeconds}
-                onChange={e => update({ restSeconds: Number(e.target.value) })}
-                className="w-full" style={{ accentColor: accent }} />
-            </FieldRow>
+            {settings.showRestTimes && (
+              <FieldRow label={`Rest: ${restDisplay(local.restSeconds)}`}>
+                <input type="range" min={0} max={300} step={15} value={local.restSeconds}
+                  onChange={e => update({ restSeconds: Number(e.target.value) })}
+                  className="w-full" style={{ accentColor: accent }} />
+              </FieldRow>
+            )}
 
             <FieldRow label="Notes (optional)">
               <input value={local.notes} onChange={e => update({ notes: e.target.value })}

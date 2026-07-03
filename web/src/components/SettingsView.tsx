@@ -30,9 +30,15 @@ export function SettingsView() {
       setImportMsg('Imported successfully!')
       setShowImport(false)
       setImportText('')
+      window.setTimeout(() => setImportMsg(''), 4000)
     } catch {
       setImportMsg('Invalid JSON format.')
     }
+  }
+
+  const openImport = () => {
+    setImportMsg('')
+    setShowImport(true)
   }
 
   return (
@@ -126,7 +132,7 @@ export function SettingsView() {
               <SettingsRow icon="📤" label="Export Workouts" chevron />
             </button>
             <SettingsDivider />
-            <button onClick={() => setShowImport(true)} className="w-full text-left">
+            <button onClick={openImport} className="w-full text-left">
               <SettingsRow icon="📥" label="Import Workouts" chevron />
             </button>
             <SettingsDivider />
@@ -167,7 +173,7 @@ export function SettingsView() {
       {showImport && (
         <div className="fixed inset-0 z-50 flex flex-col anim-right" style={{ background: '#0A0A0A' }}>
           <div className="flex items-center justify-between px-4 py-3 border-b safe-top" style={{ borderColor: '#222' }}>
-            <button onClick={() => setShowImport(false)} className="text-textSecondary text-sm">Cancel</button>
+            <button onClick={() => { setShowImport(false); setImportMsg('') }} className="text-textSecondary text-sm">Cancel</button>
             <span className="font-semibold text-white text-sm">Import Workouts</span>
             <button onClick={doImport} disabled={!importText.trim()}
               className="text-sm font-bold"
@@ -183,8 +189,11 @@ export function SettingsView() {
               placeholder="Paste JSON here..."
               rows={14}
               className="w-full font-mono p-3 rounded-xl resize-none"
-              style={{ background: '#171717', color: '#fff', border: 'none', outline: 'none', fontSize: 14 }}
+              style={{ background: '#171717', color: '#fff', border: 'none', outline: 'none', fontSize: 16 }}
             />
+            {importMsg && (
+              <p className="text-sm text-center mt-3" style={{ color: '#FF3B30' }}>{importMsg}</p>
+            )}
           </div>
         </div>
       )}
@@ -227,11 +236,12 @@ function Toggle({ value, onChange, accent, accentFg }: {
     <button onClick={() => onChange(!value)}
       className="w-12 h-7 rounded-full relative transition-colors shrink-0"
       style={{ background: value ? accent : '#2e2e2e' }}>
-      <div className="absolute top-1 w-5 h-5 rounded-full shadow-md transition-transform duration-200"
+      <div className="absolute top-1 w-5 h-5 rounded-full shadow-md"
         style={{
-          left: value ? 'calc(100% - 22px)' : '4px',
+          left: 4,
           background: value ? accentFg : '#666',
-          transform: 'translateZ(0)',
+          transform: value ? 'translateX(20px)' : 'translateX(0)',
+          transition: 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.2s',
         }} />
     </button>
   )
