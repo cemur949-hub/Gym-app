@@ -78,7 +78,7 @@ export function Sheet({
 }) {
   if (!isOpen) return null
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end" style={{ background: 'rgba(0,0,0,0.6)' }}>
+    <div className="fixed inset-0 z-50 flex flex-col justify-end anim-backdrop" style={{ background: 'rgba(0,0,0,0.6)' }}>
       <div
         className="absolute inset-0"
         onClick={onClose}
@@ -90,7 +90,7 @@ export function Sheet({
           <span className="font-semibold text-white text-sm">{title}</span>
           <div className="w-12" />
         </div>
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto" style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}>
           {children}
         </div>
       </div>
@@ -109,7 +109,7 @@ export function Modal({
 }) {
   if (!isOpen) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6"
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-6 anim-backdrop"
       style={{ background: 'rgba(0,0,0,0.6)' }}>
       <div className="rounded-2xl p-5 w-full max-w-xs anim-modal" style={{ background: '#1c1c1e' }}>
         <h3 className="font-bold text-white text-center mb-1">{title}</h3>
@@ -157,8 +157,13 @@ export function ColorPicker({
       {COLORS.map(hex => (
         <button key={hex} onClick={() => onChange(hex)}
           className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{ background: `#${hex}` }}>
-          {value === hex && <span className="text-white text-xs font-bold">✓</span>}
+          style={{
+            background: `#${hex}`,
+            boxShadow: value === hex ? `0 0 0 2px #171717, 0 0 0 4px #${hex}` : 'none',
+          }}>
+          {value === hex && (
+            <span className="text-xs font-bold" style={{ color: accentTextColor(hex) }}>✓</span>
+          )}
         </button>
       ))}
     </div>

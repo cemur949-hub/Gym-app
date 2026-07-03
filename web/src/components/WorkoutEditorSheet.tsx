@@ -72,7 +72,8 @@ export function WorkoutEditorSheet({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 pb-8">
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 32px)' }}>
           {/* Workout info */}
           <div className="card space-y-3">
             <SectionHeader>Workout Info</SectionHeader>
@@ -89,7 +90,7 @@ export function WorkoutEditorSheet({
                 {program.splits.map(s => (
                   <button key={s.id} onClick={() => setSplitID(s.id)}
                     className="px-3.5 py-1.5 rounded-full text-sm font-bold shrink-0"
-                    style={{ background: splitID === s.id ? `#${s.colorHex}` : '#222', color: splitID === s.id ? '#fff' : '#8E8E93' }}>
+                    style={{ background: splitID === s.id ? `#${s.colorHex}` : '#222', color: splitID === s.id ? accentTextColor(s.colorHex) : '#8E8E93' }}>
                     {s.name}
                   </button>
                 ))}

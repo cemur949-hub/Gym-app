@@ -61,7 +61,10 @@ export function ProgramDetailView({
             {program.splits.map(s => (
               <button key={s.id} onClick={() => setFilterSplitID(filterSplitID === s.id ? 'all' : s.id)}
                 className="px-3 py-1 rounded-full text-xs font-bold shrink-0"
-                style={{ background: filterSplitID === s.id ? `#${s.colorHex}` : '#222', color: '#fff' }}>
+                style={{
+                  background: filterSplitID === s.id ? `#${s.colorHex}` : '#222',
+                  color: filterSplitID === s.id ? accentTextColor(s.colorHex) : '#8E8E93',
+                }}>
                 {s.name}
               </button>
             ))}

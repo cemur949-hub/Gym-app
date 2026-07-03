@@ -46,7 +46,7 @@ export function ExerciseEditorRow({
           <div className="space-y-3 pt-3">
             <FieldRow label="Exercise Name">
               <input value={local.name} onChange={e => update({ name: e.target.value })}
-                placeholder="e.g. Bench Press" className="styled-input" style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
+                placeholder="e.g. Bench Press" style={{ background: '#171717', color: '#fff', borderRadius: 10, padding: '8px 12px', width: '100%', border: 'none', outline: 'none', fontSize: 16 }} />
             </FieldRow>
 
             <div className="flex gap-3">

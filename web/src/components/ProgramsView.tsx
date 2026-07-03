@@ -173,7 +173,8 @@ function ProgramEditorSheet({
             {program ? 'Save' : 'Create'}
           </button>
         </div>
-        <div className="overflow-y-auto flex-1 p-4 space-y-4 pb-8">
+        <div className="overflow-y-auto flex-1 p-4 space-y-4"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 32px)' }}>
           <div className="flex justify-center mb-2">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
               style={{ background: `#${colorHex}22` }}>

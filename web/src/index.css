@@ -10,7 +10,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   margin: 0;
   overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
+
+input, textarea { -webkit-user-select: text; user-select: text; }
 
 #root {
   max-width: 430px;
@@ -19,8 +23,10 @@ body {
   position: relative;
 }
 
-/* 16px prevents iOS auto-zoom on input focus */
-input, textarea {
+/* 16px prevents iOS auto-zoom on input focus.
+   Scoped so range/checkbox/file inputs keep native behavior. */
+input:not([type='range']):not([type='checkbox']):not([type='file']),
+textarea {
   -webkit-appearance: none;
   appearance: none;
   background: #222;
@@ -34,6 +40,37 @@ input, textarea {
 }
 
 input::placeholder, textarea::placeholder { color: #8E8E93; }
+
+/* Rest-time slider */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #333;
+  outline: none;
+  margin: 10px 0;
+  padding: 0;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+input[type='range']::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
 
 button { cursor: pointer; border: none; background: none; color: inherit; font-family: inherit; }
 
@@ -77,6 +114,10 @@ button { cursor: pointer; border: none; background: none; color: inherit; font-f
 @keyframes scaleIn {
   from { transform: scale(0.94); opacity: 0 }
   to   { transform: scale(1);    opacity: 1 }
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.9) }
+  50%      { opacity: 1;    transform: scale(1.1) }
 }
 
 .anim-fade   { animation: fadeIn      0.18s ease-out both }

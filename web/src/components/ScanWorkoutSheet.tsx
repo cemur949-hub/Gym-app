@@ -134,7 +134,8 @@ export function ScanWorkoutSheet({
           <div className="w-12" />
         </div>
 
-        <div className="p-6 pb-10 flex flex-col items-center gap-5">
+        <div className="p-6 flex flex-col items-center gap-5"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 24px)' }}>
           {status === 'scanning' ? (
             <>
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl"
@@ -146,7 +147,7 @@ export function ScanWorkoutSheet({
               <div className="flex gap-1.5 mt-2">
                 {[0, 1, 2].map(i => (
                   <div key={i} className="w-2 h-2 rounded-full"
-                    style={{ background: accent, opacity: 0.4, animation: `pulse 1.2s ease-in-out ${i * 0.4}s infinite` }} />
+                    style={{ background: accent, animation: `dotPulse 1.2s ease-in-out ${i * 0.4}s infinite` }} />
                 ))}
               </div>
             </>

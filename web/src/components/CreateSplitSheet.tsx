@@ -42,7 +42,8 @@ export function CreateSplitSheet({
             Create
           </button>
         </div>
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)' }}>
           <div>
             <SectionHeader>Split Name</SectionHeader>
             <DarkTextField placeholder="e.g. Push Day, Upper Body..." value={name} onChange={setName} />
