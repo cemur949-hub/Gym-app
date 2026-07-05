@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cube Solver — 3×3×3 Rubik's Cube</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
+</head>
+<body>
+  <header>
+    <h1>🧊 Cube Solver</h1>
+    <p class="tagline">Solves any 3×3×3 Rubik's cube — scan it with your camera or enter the colors by hand. Works with any color scheme.</p>
+    <div id="solver-status" class="status-chip preparing">⏳ Preparing solver…</div>
+  </header>
+
+  <nav class="tabs">
+    <button id="tab-scan" class="tab active">📷 Scan</button>
+    <button id="tab-manual" class="tab">🎨 Manual input</button>
+  </nav>
+
+  <!-- ============ SCAN PANEL ============ -->
+  <section id="scan-panel" class="panel">
+    <div id="scan-intro">
+      <p>Point your camera at the cube and capture each of the six faces. The colors are
+      detected automatically from the six center stickers, so <strong>any color scheme works</strong> —
+      no calibration needed.</p>
+      <button id="btn-start-camera" class="btn primary">📷 Start camera</button>
+      <p id="camera-error" class="error hidden"></p>
+    </div>
+
+    <div id="scan-live" class="hidden">
+      <div class="scan-step">
+        <div class="scan-progress" id="scan-progress"></div>
+        <h2 id="scan-instruction"></h2>
+        <p id="scan-hint" class="hint"></p>
+      </div>
+      <div class="cam-wrap">
+        <video id="video" autoplay playsinline muted></video>
+        <div class="grid-overlay">
+          <div></div><div></div><div></div>
+          <div></div><div class="center-cell"></div><div></div>
+          <div></div><div></div><div></div>
+        </div>
+      </div>
+      <div class="scan-controls">
+        <button id="btn-capture" class="btn primary big">📸 Capture face</button>
+        <button id="btn-retake" class="btn subtle" disabled>↩ Retake last</button>
+        <button id="btn-restart-scan" class="btn subtle">Restart scan</button>
+      </div>
+      <div id="scan-thumbs" class="scan-thumbs"></div>
+    </div>
+    <canvas id="capture-canvas" class="hidden"></canvas>
+  </section>
+
+  <!-- ============ MANUAL PANEL ============ -->
+  <section id="manual-panel" class="panel hidden">
+    <p class="hint">Pick a color below, then tap the stickers to paint them. The six <em>center</em>
+    stickers are fixed — they define which color belongs to which face. Using a cube with
+    non-standard colors? Click the ✎ dot on a swatch to change its color to match your cube.</p>
+
+    <div id="palette" class="palette"></div>
+
+    <div id="net" class="net"></div>
+
+    <div class="toolbar">
+      <button id="btn-solve" class="btn primary big" disabled>🧠 Solve</button>
+      <button id="btn-scramble" class="btn subtle">🎲 Fill with random scramble</button>
+      <button id="btn-clear" class="btn subtle">🧹 Clear</button>
+    </div>
+    <p id="input-error" class="error hidden"></p>
+  </section>
+
+  <!-- ============ SOLUTION ============ -->
+  <section id="solution-panel" class="panel hidden">
+    <h2>Solution <span id="move-count" class="badge"></span></h2>
+    <div id="moves" class="moves"></div>
+    <div class="playback">
+      <div id="playback-net" class="net small"></div>
+      <div class="playback-controls">
+        <button id="btn-first" class="btn subtle">⏮</button>
+        <button id="btn-prev" class="btn subtle">◀ Prev</button>
+        <button id="btn-play" class="btn primary">▶ Play</button>
+        <button id="btn-next" class="btn subtle">Next ▶</button>
+        <button id="btn-copy" class="btn subtle">📋 Copy</button>
+      </div>
+      <p id="playback-caption" class="hint"></p>
+    </div>
+
+    <details class="notation">
+      <summary>What do the letters mean? (move notation)</summary>
+      <p>Hold the cube with the <strong>front face toward you</strong> — the same orientation
+      you used when entering/scanning it (Up face on top).</p>
+      <ul>
+        <li><strong>U</strong> Up, <strong>D</strong> Down, <strong>L</strong> Left,
+            <strong>R</strong> Right, <strong>F</strong> Front, <strong>B</strong> Back</li>
+        <li>A plain letter (e.g. <code>R</code>) = turn that face <em>clockwise</em> 90°
+            (as if you were looking straight at that face).</li>
+        <li>An apostrophe (e.g. <code>R'</code>) = counter-clockwise 90°.</li>
+        <li>A 2 (e.g. <code>R2</code>) = half turn, 180°.</li>
+      </ul>
+    </details>
+  </section>
+
+  <footer>
+    Solving engine: <a href="https://github.com/ldez/cubejs" target="_blank" rel="noopener">cubejs</a>
+    (Kociemba two-phase algorithm, MIT license). Solutions are typically ≤ 22 moves.
+  </footer>
+
+  <script src="lib/cube.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
